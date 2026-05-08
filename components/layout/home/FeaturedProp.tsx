@@ -39,25 +39,19 @@ export default function FeaturedProp() {
 
   const fetchFeaturedProperties = async () => {
     try {
-      console.log("Fetching featured properties...");
       const response = await api.getProperties({
         limit: 3,
         isFeatured: true,
       });
 
-      console.log("API Response:", response);
-
       if (response.success && response.properties) {
-        console.log("Properties found:", response.properties);
-        // Filter for featured properties that are active
         const featuredProperties = response.properties
           .filter(
             (property: Property) => property.isFeatured && property.isActive,
           )
           .slice(0, 3);
+
         setProperties(featuredProperties);
-      } else {
-        console.log("No properties in response or success false");
       }
     } catch (error) {
       console.error("Failed to fetch featured properties:", error);
@@ -84,28 +78,61 @@ export default function FeaturedProp() {
       blue_waters: "Bluewaters",
       city_walks: "City Walk",
     };
+
     return (
       locationLabels[location] ||
       location.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())
     );
   };
 
+  const SectionHeader = () => (
+    <div className="space-y-3 sm:space-y-4">
+      <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-primary sm:text-sm">
+        Exclusive Listings
+      </h3>
+
+      <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+        <div className="max-w-3xl">
+          <h2 className="text-2xl font-bold leading-tight text-slate-900 sm:text-3xl md:text-4xl lg:text-5xl">
+            Featured Properties
+          </h2>
+
+          <p className="mt-3 text-sm leading-7 text-gray-600 sm:text-base sm:leading-8">
+            Discover premium residences and high-return investments curated by
+            our expert Dubai Real Estate Agents, part of a leading real estate
+            agency in Dubai recognized among the top real estate companies in
+            Dubai.
+          </p>
+        </div>
+
+        <Link href="/properties" className="w-full sm:w-auto">
+          <Button
+            variant="outline"
+            className="w-full border border-secondary font-medium text-secondary transition-all duration-500 ease-in-out hover:bg-secondary hover:text-white hover:shadow-none sm:w-auto"
+          >
+            View All Properties
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </Link>
+      </div>
+    </div>
+  );
+
   if (loading) {
     return (
-      <section className="w-full bg-white lg:py-24 md:py-20 sm:py-16 py-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <div className="animate-pulse">
-              <div className="h-8 bg-gray-200 rounded w-32 mx-auto mb-4"></div>
-              <div className="h-12 bg-gray-200 rounded w-64 mx-auto mb-8"></div>
-              <div className="grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 lg:gap-12 md:gap-8 sm:gap-6 gap-4">
-                {[1, 2, 3].map((i) => (
-                  <div
-                    key={i}
-                    className="bg-gray-200 rounded-2xl h-96 animate-pulse"
-                  ></div>
-                ))}
-              </div>
+      <section className="w-full overflow-hidden bg-white py-10 sm:py-14 md:py-16 lg:py-20 xl:py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="animate-pulse">
+            <div className="mx-auto mb-4 h-5 w-36 rounded bg-gray-200 sm:mx-0" />
+            <div className="mx-auto mb-8 h-10 w-64 rounded bg-gray-200 sm:mx-0 sm:w-80" />
+
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8 xl:gap-10">
+              {[1, 2, 3].map((i) => (
+                <div
+                  key={i}
+                  className="h-[420px] rounded-2xl bg-gray-200"
+                />
+              ))}
             </div>
           </div>
         </div>
@@ -115,37 +142,15 @@ export default function FeaturedProp() {
 
   if (properties.length === 0) {
     return (
-      <section className="w-full bg-white lg:py-24 md:py-20 sm:py-16 py-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h3 className="text-primary font-medium uppercase">
-            Exclusive Listings
-          </h3>
-          <div className="">
-            <h2 className="md:text-4xl text-2xl font-bold py-2">
-              Featured Properties
-            </h2>
-            <div className="flex items-center justify-between">
-              <p className="max-w-2xl text-base text-gray-600">
-               Discover premium residences and high-return investments curated by our expert Dubai Real Estate Agents, part of a leading real estate agency in Dubai recognized among the top real estate companies in Dubai.
-              </p>
-              <Link href="/properties">
-                <Button
-                  variant={"outline"}
-                  className="hover:bg-secondary hover:text-white border border-secondary text-secondary hover:shadow-none transition-all ease duration-500 font-medium"
-                >
-                  View All Properties
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
-            </div>
-          </div>
+      <section className="w-full overflow-hidden bg-white py-10 sm:py-14 md:py-16 lg:py-20 xl:py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SectionHeader />
 
-          {/* No Featured Properties Fallback */}
-          <div className="text-center py-16">
-            <div className="max-w-md mx-auto">
-              <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+          <div className="py-12 text-center sm:py-16">
+            <div className="mx-auto max-w-md">
+              <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gray-100 sm:h-24 sm:w-24">
                 <svg
-                  className="w-12 h-12 text-gray-400"
+                  className="h-10 w-10 text-gray-400 sm:h-12 sm:w-12"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -158,15 +163,18 @@ export default function FeaturedProp() {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+
+              <h3 className="text-lg font-semibold text-gray-900 sm:text-xl">
                 No Featured Properties Available
               </h3>
-              <p className="text-gray-600 mb-6">
+
+              <p className="mt-2 text-sm leading-7 text-gray-600 sm:text-base">
                 We&apos;re currently updating our featured listings. Check back
                 soon for our handpicked selection of premium properties.
               </p>
-              <Link href="/properties">
-                <Button className="bg-[#C1A06E] hover:bg-[#a88b5e] text-white">
+
+              <Link href="/properties" className="mt-6 inline-block w-full sm:w-auto">
+                <Button className="w-full bg-[#C1A06E] text-white hover:bg-[#a88b5e] sm:w-auto">
                   Browse All Properties
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -179,39 +187,14 @@ export default function FeaturedProp() {
   }
 
   return (
-    <section className="w-full bg-white lg:py-24 md:py-20 sm:py-16 py-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h3 className="text-primary font-medium uppercase">
-          EXCLUSIVE LISTINGS
-        </h3>
-        <div className="">
-          <h2 className="md:text-4xl text-2xl font-bold py-2">
-            Featured Properties
-          </h2>
-          <div className="flex items-center justify-between">
-            <p className="max-w-2xl text-base text-gray-600">
-              Discover premium residences and high-return investments curated by
-              our expert Dubai Real Estate Agents, part of a leading real estate
-              agency in Dubai recognized among the top real estate companies in
-              Dubai.
-            </p>
-            <Link href="/properties">
-              <Button
-                variant={"outline"}
-                className="hover:bg-secondary hover:text-white border border-secondary text-secondary hover:shadow-none transition-all ease duration-500 font-medium"
-              >
-                View All Properties
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
-        </div>
-        {/* Featured Properties */}
-        <div className="grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 lg:gap-12 md:gap-8 sm:gap-6 gap-4 lg:py-12 md:py-8 sm:py-6 py-4">
+    <section className="w-full overflow-hidden bg-white py-10 sm:py-14 md:py-16 lg:py-20 xl:py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <SectionHeader />
+
+        <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 md:gap-6 lg:mt-12 lg:grid-cols-3 lg:gap-8 xl:gap-10">
           {properties.map((property) => (
-            <div key={property._id}>
+            <div key={property._id} className="min-w-0">
               <PropertyCard
-                key={property._id}
                 id={property._id}
                 image={
                   property.images.find((img) => img.isCover)?.url ||
