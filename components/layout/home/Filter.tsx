@@ -21,14 +21,18 @@ export default function Filter() {
     FALLBACK_PROPERTY_OPTIONS.locations,
   );
 
-  const tabs = [
+  const tabs: Array<{
+    name: Listings;
+    icon: typeof House;
+    label: string;
+  }> = [
     { name: "buy", icon: House, label: "Buy" },
     { name: "rent", icon: Building2, label: "Rent" },
     { name: "commercial", icon: Building2, label: "Commercial" },
     {
       name: "offplan",
       icon: Construction,
-      label: "Offplan Developer",
+      label: "Offplan",
     },
   ];
 
@@ -43,6 +47,7 @@ export default function Filter() {
         // Use fallback locations when options request fails
       }
     };
+
     loadOptions();
   }, []);
 
@@ -54,6 +59,7 @@ export default function Filter() {
     }
 
     let targetPath = "/properties";
+
     if (type === "buy") {
       targetPath = "/sale";
     } else if (type === "rent") {
@@ -61,7 +67,6 @@ export default function Filter() {
     } else if (type === "commercial") {
       params.set("category", "commercial");
     } else if (type === "offplan") {
-      // Off-plan developer tab takes user to developers listing page
       targetPath = "/developers";
     }
 
@@ -70,9 +75,9 @@ export default function Filter() {
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto bg-white rounded-xl md:rounded-2xl shadow-lg p-4 md:p-6">
+    <div className="mx-auto w-full max-w-full rounded-2xl bg-white p-4 shadow-lg sm:max-w-6xl sm:p-5 md:rounded-3xl md:p-6">
       {/* Tabs */}
-      <div className="flex gap-2 md:gap-4 mb-4 md:mb-5 overflow-x-auto no-scrollbar -mx-1 px-1">
+      <div className="mb-4 grid w-full grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:gap-3 md:mb-5 md:gap-4">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const active = type === tab.name;
@@ -80,32 +85,33 @@ export default function Filter() {
           return (
             <button
               key={tab.name}
-              onClick={() => setType(tab.name as Listings)}
+              type="button"
+              onClick={() => setType(tab.name)}
               className={clsx(
-                "flex items-center gap-1.5 md:gap-2 px-4 md:px-5 py-2.5 md:py-3 rounded-full text-xs md:text-sm font-medium transition whitespace-nowrap",
+                "flex min-w-0 items-center justify-center gap-1.5 rounded-full px-3 py-2.5 text-xs font-medium transition sm:w-auto sm:px-4 md:gap-2 md:px-5 md:py-3 md:text-sm",
                 active
                   ? "bg-secondary text-white"
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200",
               )}
             >
-              <Icon className="h-3.5 w-3.5 md:h-4 md:w-4" />
-              {tab.label}
+              <Icon className="h-3.5 w-3.5 shrink-0 md:h-4 md:w-4" />
+              <span className="truncate">{tab.label}</span>
             </button>
           );
         })}
       </div>
 
       {/* Search Row */}
-      <div className="flex flex-col md:flex-row gap-3 md:gap-4 items-stretch md:items-center">
-        {/* Location */}
-        <div className="grow">
+      <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-[1fr_auto] md:gap-4">
+        <div className="min-w-0">
           <Input
             value={location}
             onChange={(e) => setLocation(e.target.value)}
             list="hero-location-suggestions"
             placeholder="Enter location (e.g. Downtown Dubai)"
-            className="rounded-lg w-full h-12 md:h-11 border border-gray-200 text-gray-700 text-sm md:text-base"
+            className="h-12 w-full min-w-0 rounded-lg border border-gray-200 text-sm text-gray-700 md:h-14 md:text-base"
           />
+
           <datalist id="hero-location-suggestions">
             {locations.map((loc) => (
               <option key={loc.value} value={loc.label} />
@@ -113,13 +119,13 @@ export default function Filter() {
           </datalist>
         </div>
 
-        {/* Search Button */}
         <button
+          type="button"
           onClick={handleSearch}
-          className="h-12 md:h-14 px-6 md:px-8 rounded-lg md:rounded-xl bg-primary hover:opacity-95 text-white font-semibold flex items-center justify-center gap-2 transition w-full md:w-auto"
+          className="flex h-12 w-full min-w-0 items-center justify-center gap-2 rounded-lg bg-primary px-5 text-sm font-semibold text-white transition hover:opacity-95 md:h-14 md:w-auto md:min-w-[210px] md:rounded-xl md:px-8 md:text-base"
         >
-          <Search className="h-4 w-4" />
-          <span className="text-sm md:text-base">Search Properties</span>
+          <Search className="h-4 w-4 shrink-0" />
+          <span className="truncate">Search Properties</span>
         </button>
       </div>
     </div>
