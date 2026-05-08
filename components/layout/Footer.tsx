@@ -22,9 +22,12 @@ function NewsletterBar() {
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
+
     setLoading(true);
+
     try {
       const response = await api.subscribe({ email });
+
       if (response.success) {
         toast.success(response.message || "Subscribed successfully!");
         setEmail("");
@@ -39,20 +42,22 @@ function NewsletterBar() {
   };
 
   return (
-    <div className="bg-secondary border-b border-gray-800">
-      <div className="max-w-7xl mx-auto px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
-        <div>
-          <h3 className="text-xl font-bold text-white">
+    <div className="border-b border-gray-800 bg-secondary">
+      <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-8 sm:px-6 sm:py-10 md:flex-row md:items-center md:justify-between lg:px-8">
+        <div className="max-w-xl text-center md:text-left">
+          <h3 className="text-lg font-bold text-white sm:text-xl md:text-2xl">
             Stay Updated with Market Insights
           </h3>
-          <p className="text-gray-400 text-sm mt-1">
+
+          <p className="mt-2 text-sm leading-6 text-gray-400 sm:text-base">
             Get the latest Dubai real estate news and exclusive property
             listings delivered to your inbox.
           </p>
         </div>
+
         <form
           onSubmit={handleSubscribe}
-          className="flex w-full md:w-auto gap-2"
+          className="grid w-full grid-cols-1 gap-3 sm:grid-cols-[1fr_auto] md:max-w-xl"
         >
           <input
             type="email"
@@ -60,14 +65,15 @@ function NewsletterBar() {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your email"
             required
-            className="flex-1 md:w-72 px-4 py-3 rounded-lg bg-white/10 border border-white/10 text-white placeholder:text-gray-500 text-sm focus:outline-none focus:border-[#C1A06E]/50"
+            className="h-12 w-full min-w-0 rounded-lg border border-white/10 bg-white/10 px-4 text-sm text-white placeholder:text-gray-500 focus:border-[#C1A06E]/50 focus:outline-none"
           />
+
           <button
             type="submit"
             disabled={loading}
-            className="px-6 py-3 rounded-lg bg-[#C1A06E] hover:bg-[#a88b5e] text-white font-medium text-sm transition-colors flex items-center gap-2 shrink-0 disabled:opacity-50"
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#C1A06E] px-6 text-sm font-medium text-white transition-colors hover:bg-[#a88b5e] disabled:opacity-50 sm:w-auto"
           >
-            <Send className="w-4 h-4" />
+            <Send className="h-4 w-4 shrink-0" />
             {loading ? "..." : "Subscribe"}
           </button>
         </form>
@@ -78,179 +84,156 @@ function NewsletterBar() {
 
 export default function Footer() {
   return (
-    <footer className="bg-secondary text-white">
+    <footer className="overflow-hidden bg-secondary text-white">
       <NewsletterBar />
-      <div className="max-w-7xl mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Company Info Section */}
+
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+          {/* Company Info */}
           <div className="space-y-4">
-            <div>
-              <Link href={"/"}>
-                <Image src={"/logo.png"} alt="Logo" width={80} height={80} />
-              </Link>
-            </div>
-            <p className="text-gray-300 text-sm leading-relaxed">
+            <Link href="/" className="inline-block">
+              <Image src="/logo.png" alt="Logo" width={80} height={80} />
+            </Link>
+
+            <p className="max-w-sm text-sm leading-7 text-gray-300">
               Dubai&#39;s premier real estate advisory firm specializing in
               luxury properties, asset valuation, and investment guidance.
             </p>
-            {/* Social Media Icons */}
-            <div className="flex space-x-4 pt-4">
+
+            <div className="flex flex-wrap gap-3 pt-2">
               <a
                 href="https://facebook.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:border-primary  hover:text-primary transition-all duration-300"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-600 transition-all duration-300 hover:border-primary hover:text-primary"
               >
-                <Facebook className="w-5 h-5" />
+                <Facebook className="h-5 w-5" />
               </a>
+
               <a
                 href="https://instagram.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:border-primary  hover:text-primary transition-all duration-300"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-600 transition-all duration-300 hover:border-primary hover:text-primary"
               >
-                <Instagram className="w-5 h-5" />
+                <Instagram className="h-5 w-5" />
               </a>
+
               <a
                 href="https://linkedin.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:border-primary  hover:text-primary transition-all duration-300"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-600 transition-all duration-300 hover:border-primary hover:text-primary"
               >
-                <Linkedin className="w-5 h-5" />
+                <Linkedin className="h-5 w-5" />
               </a>
             </div>
           </div>
 
-          {/* Quick Links Section */}
+          {/* Quick Links */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-white mb-4">
+            <h3 className="text-base font-semibold text-white sm:text-lg">
               Quick Links
             </h3>
-            <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/properties"
-                  className="text-gray-300 hover:text-primary transition-colors duration-200"
-                >
-                  Properties
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/about"
-                  className="text-gray-300 hover:text-primary transition-colors duration-200"
-                >
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/contact"
-                  className="text-gray-300 hover:text-primary transition-colors duration-200"
-                >
-                  Contact
-                </Link>
-              </li>
-             <li>
-               <Link
-                 href="/developers"
-                 className="text-gray-300 hover:text-primary transition-colors duration-200"
-                 >
-                 Off-Plan Developers
-               </Link>
-             </li>
-              </ul>
-          </div>
 
-          {/* Popular Areas Section */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-white mb-4">
-              Popular Areas
-            </h3>
-            <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/properties?location=dubai_marina"
-                  className="text-gray-300 hover:text-primary transition-colors duration-200"
-                >
-                  Dubai Marina
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/properties?location=downtown_dubai"
-                  className="text-gray-300 hover:text-primary transition-colors duration-200"
-                >
-                  Downtown Dubai
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/properties?location=palm_jumeirah"
-                  className="text-gray-300 hover:text-primary transition-colors duration-200"
-                >
-                  Palm Jumeirah
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/properties?location=bussiness_bay"
-                  className="text-gray-300 hover:text-primary transition-colors duration-200"
-                >
-                  Business Bay
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/properties?location=dubai_hills"
-                  className="text-gray-300 hover:text-primary transition-colors duration-200"
-                >
-                  Dubai Hills
-                </Link>
-              </li>
+            <ul className="space-y-3 text-sm">
+              {[
+                { label: "Properties", href: "/properties" },
+                { label: "About Us", href: "/about" },
+                { label: "Contact", href: "/contact" },
+                { label: "Off-Plan Developers", href: "/developers" },
+              ].map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className="text-gray-300 transition-colors duration-200 hover:text-primary"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
-          {/* Contact Us Section */}
+
+          {/* Popular Areas */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-white mb-4">
+            <h3 className="text-base font-semibold text-white sm:text-lg">
+              Popular Areas
+            </h3>
+
+            <ul className="space-y-3 text-sm">
+              {[
+                {
+                  label: "Dubai Marina",
+                  href: "/properties?location=dubai_marina",
+                },
+                {
+                  label: "Downtown Dubai",
+                  href: "/properties?location=downtown_dubai",
+                },
+                {
+                  label: "Palm Jumeirah",
+                  href: "/properties?location=palm_jumeirah",
+                },
+                {
+                  label: "Business Bay",
+                  href: "/properties?location=bussiness_bay",
+                },
+                {
+                  label: "Dubai Hills",
+                  href: "/properties?location=dubai_hills",
+                },
+              ].map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className="text-gray-300 transition-colors duration-200 hover:text-primary"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div className="space-y-4">
+            <h3 className="text-base font-semibold text-white sm:text-lg">
               Contact Us
             </h3>
-            <div className="space-y-3">
-              {/* Address */}
-              <div className="flex items-start space-x-3">
-                <MapPin className="w-5 h-5 text-primary mt-0.5 shrink-0" />
-                <span className="text-gray-300 text-sm">
+
+            <div className="space-y-4">
+              <div className="flex items-start gap-3">
+                <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+                <span className="text-sm leading-6 text-gray-300">
                   Office No: 79 Al Fahidi St - Al Hamriya - Bur Dubai.
                 </span>
               </div>
 
-              {/* Phone */}
-              <div className="flex items-start space-x-3">
-                <Phone className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-                <div>
+              <div className="flex items-start gap-3">
+                <Phone className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+                <div className="space-y-1">
                   <a
                     href="tel:+971502828397"
-                    className="text-gray-300 hover:text-white transition-colors duration-200 text-sm"
+                    className="block text-sm text-gray-300 transition-colors duration-200 hover:text-white"
                   >
                     +971-50-282-8397
                   </a>
-                  <br />
+
                   <a
                     href="tel:+97142885213"
-                    className="text-gray-300 hover:text-white transition-colors duration-200 text-sm"
+                    className="block text-sm text-gray-300 transition-colors duration-200 hover:text-white"
                   >
                     +971-4-288-5213
                   </a>
                 </div>
               </div>
 
-              {/* Email */}
-              <div className="flex items-center space-x-3">
-                <Mail className="w-5 h-5 text-primary shrink-0" />
+              <div className="flex items-start gap-3">
+                <Mail className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
                 <a
                   href="mailto:info@assetsappraisals.com"
-                  className="text-gray-300 hover:text-white transition-colors duration-200 text-sm"
+                  className="break-all text-sm leading-6 text-gray-300 transition-colors duration-200 hover:text-white"
                 >
                   info@assetsappraisals.com
                 </a>
@@ -260,9 +243,9 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-gray-800 mt-12 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400 text-sm mb-4 md:mb-0">
+        <div className="mt-10 border-t border-gray-800 pt-6 sm:mt-12 sm:pt-8">
+          <div className="flex flex-col items-center justify-center gap-3 text-center md:flex-row md:justify-between md:text-left">
+            <p className="text-sm leading-6 text-gray-400">
               © 2026 Assets & Appraisal. All rights reserved. RERA Certified.
             </p>
           </div>
