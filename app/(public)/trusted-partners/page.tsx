@@ -23,39 +23,25 @@ export default function TrustedPartnersPage() {
   useEffect(() => {
     const fetchPartners = async () => {
       try {
-        const response = await api.getDevelopers();
-        if (response.success && Array.isArray(response.developers)) {
-          const withLogos = response.developers
-            .filter(
-              (developer: { logo?: string; isActive?: boolean }) =>
-                developer.isActive !== false &&
-                typeof developer.logo === "string" &&
-                developer.logo.trim().length > 0,
-            )
-            .map(
-              (developer: {
-                _id: string;
-                id?: string;
+        const response = await api.getTrustedPartners();
+        if (response.success && Array.isArray(response.partners)) {
+          setPartners(
+            response.partners.map(
+              (partner: {
+                id: string;
                 name: string;
                 slug: string;
                 logo: string;
                 displayOrder?: number;
               }) => ({
-                _id: String(developer.id ?? developer._id),
-                name: developer.name,
-                slug: developer.slug,
-                logo: developer.logo.trim(),
-                displayOrder: developer.displayOrder ?? 0,
+                _id: partner.id,
+                name: partner.name,
+                slug: partner.slug,
+                logo: partner.logo,
+                displayOrder: partner.displayOrder ?? 0,
               }),
-            )
-            .sort((a, b) => {
-              if (a.displayOrder !== b.displayOrder) {
-                return a.displayOrder - b.displayOrder;
-              }
-              return a.name.localeCompare(b.name);
-            });
-
-          setPartners(withLogos);
+            ),
+          );
         }
       } catch (error) {
         console.error("Failed to load trusted partners:", error);

@@ -278,6 +278,10 @@ class ApiClient {
     return this.request(`/developers${queryString}`, { method: "GET" });
   }
 
+  async getTrustedPartners() {
+    return this.request("/developers/trusted-partners", { method: "GET" });
+  }
+
   async getDevelopersAdmin() {
     return this.request("/developers/admin/all", { method: "GET" });
   }
