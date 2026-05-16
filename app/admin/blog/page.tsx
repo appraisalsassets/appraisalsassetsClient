@@ -36,7 +36,7 @@ import {
 import Link from "next/link";
 
 interface BlogPost {
-  id: string;
+  id?: string;
   _id: string;
   title: string;
   slug: string;
@@ -59,6 +59,10 @@ const CATEGORY_LABELS: Record<string, string> = {
   lifestyle: "Lifestyle",
   property_management: "Property Management",
 };
+
+function postId(post: BlogPost) {
+  return String(post.id ?? post._id ?? "");
+}
 
 export default function AdminBlogPage() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -145,12 +149,12 @@ export default function AdminBlogPage() {
     <div>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-slate-900">Blog Posts</h1>
-        <Link href="/admin/blog/add">
-          <Button className="bg-[#C1A06E] hover:bg-[#a88b5e] text-white">
+        <Button asChild className="bg-[#C1A06E] hover:bg-[#a88b5e] text-white">
+          <Link href="/admin/blog/add">
             <Plus className="w-4 h-4 mr-2" />
             New Post
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       </div>
 
       {/* Filters */}
@@ -185,12 +189,12 @@ export default function AdminBlogPage() {
         <div className="bg-white rounded-xl border border-slate-100 p-12 text-center">
           <FileText className="w-12 h-12 text-slate-300 mx-auto mb-4" />
           <p className="text-slate-500 mb-4">No blog posts found</p>
-          <Link href="/admin/blog/add">
-            <Button className="bg-[#C1A06E] hover:bg-[#a88b5e] text-white">
+          <Button asChild className="bg-[#C1A06E] hover:bg-[#a88b5e] text-white">
+            <Link href="/admin/blog/add">
               <Plus className="w-4 h-4 mr-2" />
               Create Your First Post
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
       ) : (
         <div className="bg-white rounded-xl border border-slate-100 overflow-hidden">
@@ -217,7 +221,7 @@ export default function AdminBlogPage() {
             <tbody>
               {posts.map((post) => (
                 <tr
-                  key={post.id || post._id}
+                  key={postId(post)}
                   className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors"
                 >
                   <td className="px-6 py-4">
@@ -254,7 +258,7 @@ export default function AdminBlogPage() {
                   <td className="px-6 py-4">
                     <button
                       onClick={() =>
-                        handleToggleStatus(post.id || post._id, post.status)
+                        handleToggleStatus(postId(post), post.status)
                       }
                       className="cursor-pointer"
                     >
@@ -277,16 +281,30 @@ export default function AdminBlogPage() {
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center justify-end gap-2">
-                      <Link href={`/blog/${post.slug}`} target="_blank">
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                      <Button
+                        asChild
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8"
+                      >
+                        <Link
+                          href={`/blog/${post.slug}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
                           <Eye className="w-4 h-4 text-slate-500" />
-                        </Button>
-                      </Link>
-                      <Link href={`/admin/blog/edit/${post.id || post._id}`}>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                        </Link>
+                      </Button>
+                      <Button
+                        asChild
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8"
+                      >
+                        <Link href={`/admin/blog/edit/${postId(post)}`}>
                           <Edit className="w-4 h-4 text-slate-500" />
-                        </Button>
-                      </Link>
+                        </Link>
+                      </Button>
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
                           <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -304,7 +322,7 @@ export default function AdminBlogPage() {
                           <AlertDialogFooter>
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
                             <AlertDialogAction
-                              onClick={() => handleDelete(post.id || post._id)}
+                              onClick={() => handleDelete(postId(post))}
                               className="bg-red-500 hover:bg-red-600"
                             >
                               Delete

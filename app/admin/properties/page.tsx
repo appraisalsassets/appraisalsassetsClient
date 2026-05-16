@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 interface Property {
+  id?: string;
   _id: string;
   title: string;
   referenceNumber: string;
@@ -76,10 +77,12 @@ export default function PropertiesPage() {
     }
   };
 
+  const propertyId = (p: Property) => String(p.id ?? p._id ?? "");
+
   const handleDelete = async (id: string) => {
     try {
       await api.deleteProperty(id);
-      setProperties(properties.filter((p) => p._id !== id));
+      setProperties(properties.filter((p) => propertyId(p) !== id));
       toast.success("Property deleted successfully");
     } catch (error) {
       console.error("Failed to delete property:", error);
@@ -112,12 +115,12 @@ export default function PropertiesPage() {
             <h1 className="text-3xl font-bold text-slate-900">Properties</h1>
             <p className="text-slate-500 mt-1">Manage your property listings</p>
           </div>
-          <Link href="/admin/properties/add">
-            <Button className="bg-[#C1A06E] hover:bg-[#a88b5e] text-white gap-2">
+          <Button asChild className="bg-[#C1A06E] hover:bg-[#a88b5e] text-white gap-2">
+            <Link href="/admin/properties/add">
               <Plus className="w-4 h-4" />
               Add New Property
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
 
         {/* Filters */}
@@ -270,27 +273,32 @@ export default function PropertiesPage() {
                       </td>
                       <td className="p-4 text-right">
                         <div className="flex items-center justify-end gap-2">
-                          <Link
-                            href={`/properties/${property._id}`}
-                            target="_blank"
+                          <Button
+                            asChild
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-slate-500 hover:text-[#C1A06E] hover:bg-[#C1A06E]/10"
                           >
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8 text-slate-500 hover:text-[#C1A06E] hover:bg-[#C1A06E]/10"
+                            <Link
+                              href={`/properties/${propertyId(property)}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
                             >
                               <Eye className="w-4 h-4" />
-                            </Button>
-                          </Link>
-                          <Link href={`/admin/properties/edit/${property._id}`}>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8 text-slate-500 hover:text-blue-600 hover:bg-blue-50"
+                            </Link>
+                          </Button>
+                          <Button
+                            asChild
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-slate-500 hover:text-blue-600 hover:bg-blue-50"
+                          >
+                            <Link
+                              href={`/admin/properties/edit/${propertyId(property)}`}
                             >
                               <Edit className="w-4 h-4" />
-                            </Button>
-                          </Link>
+                            </Link>
+                          </Button>
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
                               <Button
@@ -315,7 +323,9 @@ export default function PropertiesPage() {
                               <AlertDialogFooter>
                                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                                 <AlertDialogAction
-                                  onClick={() => handleDelete(property._id)}
+                                  onClick={() =>
+                                    handleDelete(propertyId(property))
+                                  }
                                   className="bg-red-600 hover:bg-red-700 text-white border-none"
                                 >
                                   Delete

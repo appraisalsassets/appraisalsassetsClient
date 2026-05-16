@@ -216,6 +216,22 @@ class ApiClient {
     });
   }
 
+  private async parseFetchResponse(response: Response): Promise<ApiResponse> {
+    let data: ApiResponse;
+    try {
+      data = await response.json();
+    } catch {
+      if (!response.ok) {
+        throw new Error(response.statusText || "Invalid server response");
+      }
+      throw new Error("Invalid server response");
+    }
+    if (!response.ok) {
+      throw new Error(data.message || response.statusText || "Request failed");
+    }
+    return data;
+  }
+
   async createProperty(formData: FormData) {
     const headers: HeadersInit = {};
     if (this.accessToken) {
@@ -245,7 +261,7 @@ class ApiClient {
       credentials: "include",
     });
 
-    return response.json();
+    return this.parseFetchResponse(response);
   }
 
   async deleteProperty(id: string) {
@@ -512,7 +528,7 @@ class ApiClient {
       credentials: "include",
     });
 
-    return response.json();
+    return this.parseFetchResponse(response);
   }
 
   async deleteBlogPost(id: string) {

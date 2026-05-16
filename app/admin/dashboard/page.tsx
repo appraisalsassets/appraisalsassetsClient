@@ -23,6 +23,7 @@ interface DashboardStats {
 }
 
 interface Property {
+  id?: string;
   _id: string;
   title: string;
   price: {
@@ -288,7 +289,11 @@ export default function DashboardPage() {
                       {property.price?.currency ?? "AED"} {(property.price?.amount ?? 0).toLocaleString()}
                     </p>
                   </div>
-                  <Link href={`/admin/properties/edit/${property._id}`} className="p-2 hover:bg-slate-200 rounded-lg transition-colors" title="Edit property">
+                  <Link
+                    href={`/admin/properties/edit/${String(property.id ?? property._id)}`}
+                    className="p-2 hover:bg-slate-200 rounded-lg transition-colors"
+                    title="Edit property"
+                  >
                     <Eye className="w-5 h-5 text-slate-600" />
                   </Link>
                 </div>

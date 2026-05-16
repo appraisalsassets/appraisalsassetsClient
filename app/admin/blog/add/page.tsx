@@ -109,11 +109,11 @@ export default function AddBlogPostPage() {
     <div className="w-full mx-auto pb-12">
       {/* Header */}
       <div className="flex items-center gap-4 mb-8">
-        <Link href="/admin/blog">
-          <Button variant="ghost" size="icon">
+        <Button variant="ghost" size="icon" asChild>
+          <Link href="/admin/blog">
             <ArrowLeft className="w-5 h-5" />
-          </Button>
-        </Link>
+          </Link>
+        </Button>
         <h1 className="text-2xl font-bold text-slate-900">New Blog Post</h1>
       </div>
 
