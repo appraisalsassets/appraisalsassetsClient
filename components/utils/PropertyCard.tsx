@@ -1,4 +1,3 @@
-import Image from "next/image";
 import {
   BedDouble,
   Bath,
@@ -10,6 +9,7 @@ import {
 import Link from "next/link";
 import { PropertyCardProps } from "@/types/property";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 const locationLabels = {
   "dubai-marina": "Dubai Marina",
@@ -59,6 +59,17 @@ export default function PropertyCard({
   status,
   wrapInLink = true,
 }: PropertyCardProps) {
+  const [imgError, setImgError] = useState(false);
+  const [imgSrc, setImgSrc] = useState(
+    image || "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=800"
+  );
+
+  const handleImageError = () => {
+    if (!imgError) {
+      setImgError(true);
+      setImgSrc("https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=800");
+    }
+  };
   const handleWhatsAppClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -95,13 +106,13 @@ export default function PropertyCard({
     <div className="group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden h-full">
       {/* Property Image */}
       <div className="relative h-72 md:h-80 overflow-hidden">
-        <Image
-          src={image || "/placeholder-property.jpg"}
+        <img
+          src={imgSrc}
           alt={title || "Property"}
-          fill
-          className="object-cover group-hover:scale-110 transition-transform duration-700"
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+          onError={handleImageError}
         />
-        <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
 
         {category && (
           <div
