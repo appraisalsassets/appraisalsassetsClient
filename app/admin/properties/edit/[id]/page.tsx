@@ -8,7 +8,8 @@ import {
   ArrowLeft, 
   Upload, 
   X,
-  Building2 
+  Building2,
+  FileText,
 } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -38,6 +39,9 @@ export default function EditPropertyPage() {
   const [existingImages, setExistingImages] = useState<Array<{ url: string; isCover: boolean }>>([]);
   const [imageUrlInput, setImageUrlInput] = useState("");
   const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [pdfFile, setPdfFile] = useState<File | null>(null);
+  const [existingPdf, setExistingPdf] = useState<{ url: string; fileName: string } | null>(null);
+  const [removePdf, setRemovePdf] = useState(false);
   const [developers, setDevelopers] = useState<
     Array<{ _id: string; name: string; slug: string }>
   >([]);
@@ -144,6 +148,16 @@ export default function EditPropertyPage() {
       : img
   )
 );
+        if (p.documentPdf?.url) {
+          setExistingPdf({
+            url: p.documentPdf.url,
+            fileName: p.documentPdf.fileName || "property-brochure.pdf",
+          });
+        } else {
+          setExistingPdf(null);
+        }
+        setRemovePdf(false);
+        setPdfFile(null);
       }
     } catch (error) {
       console.error('Failed to fetch property:', error);
@@ -252,6 +266,12 @@ export default function EditPropertyPage() {
       });
       if (imageUrls.length > 0) {
         data.append("imageUrls", JSON.stringify(imageUrls));
+      }
+      if (pdfFile) {
+        data.append("documentPdf", pdfFile);
+      }
+      if (removePdf) {
+        data.append("removeDocumentPdf", "true");
       }
 
       const response = await api.updateProperty(id, data);
@@ -638,6 +658,54 @@ export default function EditPropertyPage() {
                 </div>
               )}
             </div>
+          </div>
+
+          <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
+            <h2 className="text-lg font-semibold text-slate-900 mb-4">
+              Property brochure (PDF)
+            </h2>
+            {existingPdf && !removePdf && !pdfFile && (
+              <div className="mb-3 flex items-center justify-between gap-2 rounded-md border border-slate-200 px-3 py-2">
+                <span className="text-xs text-slate-600 truncate flex items-center gap-2">
+                  <FileText className="w-4 h-4 shrink-0 text-[#C1A06E]" />
+                  {existingPdf.fileName}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setRemovePdf(true)}
+                  className="text-red-500 text-xs font-medium shrink-0"
+                >
+                  Remove
+                </button>
+              </div>
+            )}
+            <div className="border-2 border-dashed border-slate-200 rounded-lg p-6 text-center hover:bg-slate-50 transition-colors relative">
+              <input
+                type="file"
+                accept="application/pdf"
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                onChange={(e) => {
+                  setPdfFile(e.target.files?.[0] || null);
+                  setRemovePdf(false);
+                }}
+              />
+              <FileText className="w-8 h-8 text-slate-400 mx-auto mb-2" />
+              <p className="text-sm text-slate-500">
+                {existingPdf && !removePdf ? "Replace PDF" : "Upload PDF (max 15MB)"}
+              </p>
+            </div>
+            {pdfFile && (
+              <div className="mt-3 flex items-center justify-between gap-2 rounded-md border border-slate-200 px-3 py-2">
+                <span className="text-xs text-slate-600 truncate">{pdfFile.name}</span>
+                <button
+                  type="button"
+                  onClick={() => setPdfFile(null)}
+                  className="text-red-500 text-xs font-medium shrink-0"
+                >
+                  Clear new file
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Settings */}

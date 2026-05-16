@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import api from "@/lib/api";
 import { toast } from "sonner";
-import { ArrowLeft, Upload, X } from "lucide-react";
+import { ArrowLeft, FileText, Upload, X } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,6 +26,7 @@ export default function AddPropertyPage() {
   const [loading, setLoading] = useState(false);
   const [images, setImages] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
+  const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [imageUrlInput, setImageUrlInput] = useState("");
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const amenitiesOptions = FALLBACK_PROPERTY_OPTIONS.amenities;
@@ -221,6 +222,9 @@ export default function AddPropertyPage() {
       images.forEach((image) => {
         data.append("images", image);
       });
+      if (pdfFile) {
+        data.append("documentPdf", pdfFile);
+      }
       if (imageUrls.length > 0) {
         data.append("imageUrls", JSON.stringify(imageUrls));
       }
@@ -629,6 +633,37 @@ export default function AddPropertyPage() {
                 </div>
               )}
             </div>
+          </div>
+
+          <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
+            <h2 className="text-lg font-semibold text-slate-900 mb-4">
+              Property brochure (PDF)
+            </h2>
+            <p className="text-xs text-slate-500 mb-3">
+              Optional. Visitors can download this from the property details page.
+            </p>
+            <div className="border-2 border-dashed border-slate-200 rounded-lg p-6 text-center hover:bg-slate-50 transition-colors relative">
+              <input
+                type="file"
+                accept="application/pdf"
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                onChange={(e) => setPdfFile(e.target.files?.[0] || null)}
+              />
+              <FileText className="w-8 h-8 text-slate-400 mx-auto mb-2" />
+              <p className="text-sm text-slate-500">Upload PDF (max 15MB)</p>
+            </div>
+            {pdfFile && (
+              <div className="mt-3 flex items-center justify-between gap-2 rounded-md border border-slate-200 px-3 py-2">
+                <span className="text-xs text-slate-600 truncate">{pdfFile.name}</span>
+                <button
+                  type="button"
+                  onClick={() => setPdfFile(null)}
+                  className="text-red-500 text-xs font-medium shrink-0"
+                >
+                  Remove
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Settings */}

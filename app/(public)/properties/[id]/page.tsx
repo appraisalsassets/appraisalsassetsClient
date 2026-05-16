@@ -16,6 +16,8 @@ import {
   ArrowLeft,
   Check,
   Loader2,
+  Download,
+  FileText,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
@@ -45,6 +47,10 @@ interface Property {
   phone?: string;
   whatsAppNumber?: string;
   images?: string[] | { url: string }[];
+  documentPdf?: {
+    url?: string;
+    fileName?: string;
+  };
 }
 
 const locationLabels: Record<string, string> = {
@@ -161,6 +167,9 @@ export default function PropertyDetail() {
   const isSaleProperty =
     normalizedCategory === "for_sale" || normalizedCategory === "sale";
   const hasValidPrice = Number(property.price?.amount || 0) > 0;
+  const pdfUrl = property.documentPdf?.url?.trim() || "";
+  const pdfFileName =
+    property.documentPdf?.fileName?.trim() || "property-brochure.pdf";
 
   return (
     <div className="min-h-screen bg-gray-50 mt-36">
@@ -281,8 +290,24 @@ export default function PropertyDetail() {
               </div>
 
               {/* Actions */}
-              <div className="flex gap-3 mt-6">
-                <Button variant="outline" className="w-full">
+              <div className="flex flex-col sm:flex-row gap-3 mt-6">
+                {pdfUrl ? (
+                  <Button
+                    asChild
+                    className="w-full sm:flex-1 bg-[#C1A06E] hover:bg-[#a88b5e] text-white"
+                  >
+                    <a
+                      href={pdfUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      download={pdfFileName}
+                    >
+                      <Download className="w-4 h-4 mr-2" />
+                      Download brochure (PDF)
+                    </a>
+                  </Button>
+                ) : null}
+                <Button variant="outline" className="w-full sm:flex-1">
                   <Share2 className="w-4 h-4 mr-2" />
                   Share
                 </Button>

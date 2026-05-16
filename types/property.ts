@@ -23,6 +23,10 @@ export interface Property {
     url: string;
     isCover?: boolean;
   }>;
+  documentPdf?: {
+    url?: string;
+    fileName?: string;
+  };
   location: string;
   phone?: string;
   whatsAppNumber?: string;
@@ -83,6 +87,10 @@ export function normalizeProperty(property: Record<string, unknown>): Property {
     amenities: (property.amenities as string[]) || [],
     images:
       (property.images as Array<{ url: string; isCover?: boolean }>) || [],
+    documentPdf: (property.documentPdf as { url?: string; fileName?: string }) || {
+      url: "",
+      fileName: "",
+    },
     location: (property.location as string) || "Dubai",
     phone: property.phone as string,
     whatsAppNumber: property.whatsAppNumber as string,
