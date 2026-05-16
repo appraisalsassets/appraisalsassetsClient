@@ -331,12 +331,12 @@ export default function TestimonialsSection() {
         </div>
 
         {/* All testimonials preview grid */}
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="mt-16 flex justify-between gap-4">
           {testimonials.map((testimonial, index) => (
             <div
               key={testimonial.id}
               onClick={() => goToSlide(index)}
-              className={`cursor-pointer p-4 rounded-xl border transition-all duration-300 ${
+              className={`cursor-pointer p-4 rounded-xl border transition-all duration-300 flex-1 ${
                 index === currentIndex
                   ? "border-[#C1A06E] bg-white shadow-md"
                   : "border-gray-100 bg-white/50 hover:border-[#C1A06E]/50 hover:bg-white"

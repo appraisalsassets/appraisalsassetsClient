@@ -115,7 +115,7 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="mt-10 grid gap-4 sm:mt-16 sm:grid-cols-3">
+        <div className="mt-10 flex flex-wrap justify-between gap-4 sm:mt-16">
           {ANALYTICS.map((item) => (
             <div
               key={item.title}
