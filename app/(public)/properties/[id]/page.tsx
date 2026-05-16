@@ -326,10 +326,8 @@ export default function PropertyDetail() {
               </Card>
             )}
 
-            {/* Mortgage Calculator (for sale properties) */}
-            {isSaleProperty && hasValidPrice && (
-              <MortgageCalculator propertyPrice={property.price?.amount ?? 0} />
-            )}
+            {/* Mortgage Calculator */}
+            <MortgageCalculator propertyPrice={property.price?.amount ?? 0} />
           </div>
 
           {/* Sidebar */}
