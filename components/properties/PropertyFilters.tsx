@@ -14,7 +14,11 @@ import { Slider } from "@/components/ui/slider";
 import { X, SlidersHorizontal, Search, MapPin } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import api from "@/lib/api";
-import { FALLBACK_PROPERTY_OPTIONS, SelectOption } from "@/constants/form-options";
+import {
+  FALLBACK_PROPERTY_OPTIONS,
+  normalizeSelectOptions,
+  SelectOption,
+} from "@/constants/form-options";
 
 const bedroomOptions = [
   { value: "all", label: "Any Bedrooms" },
@@ -85,15 +89,24 @@ export default function PropertyFilters({
         if (response.success && response.data) {
           setDynamicCategories([
             { value: "all", label: "All Categories" },
-            ...(response.data.categories || FALLBACK_PROPERTY_OPTIONS.categories),
+            ...normalizeSelectOptions(
+              response.data.categories,
+              FALLBACK_PROPERTY_OPTIONS.categories,
+            ),
           ]);
           setDynamicLocations([
             { value: "all", label: "All Locations" },
-            ...(response.data.locations || FALLBACK_PROPERTY_OPTIONS.locations),
+            ...normalizeSelectOptions(
+              response.data.locations,
+              FALLBACK_PROPERTY_OPTIONS.locations,
+            ),
           ]);
           setDynamicPropertyTypes([
             { value: "all", label: "All Types" },
-            ...(response.data.propertyTypes || FALLBACK_PROPERTY_OPTIONS.propertyTypes),
+            ...normalizeSelectOptions(
+              response.data.propertyTypes,
+              FALLBACK_PROPERTY_OPTIONS.propertyTypes,
+            ),
           ]);
         }
       } catch (error) {

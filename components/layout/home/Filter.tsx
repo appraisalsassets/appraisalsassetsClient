@@ -8,6 +8,7 @@ import clsx from "clsx";
 import api from "@/lib/api";
 import {
   FALLBACK_PROPERTY_OPTIONS,
+  normalizeSelectOptions,
   SelectOption,
 } from "@/constants/form-options";
 
@@ -40,8 +41,13 @@ export default function Filter() {
     const loadOptions = async () => {
       try {
         const response = await api.getPropertyFormOptions();
-        if (response.success && response.data?.locations) {
-          setLocations(response.data.locations);
+        if (response.success && response.data) {
+          setLocations(
+            normalizeSelectOptions(
+              response.data.locations,
+              FALLBACK_PROPERTY_OPTIONS.locations,
+            ),
+          );
         }
       } catch (error) {
         // Use fallback locations when options request fails

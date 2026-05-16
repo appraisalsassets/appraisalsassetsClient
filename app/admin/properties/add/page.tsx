@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select";
 import {
   FALLBACK_PROPERTY_OPTIONS,
+  normalizeSelectOptions,
   SelectOption,
 } from "@/constants/form-options";
 
@@ -29,7 +30,6 @@ export default function AddPropertyPage() {
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [imageUrlInput, setImageUrlInput] = useState("");
   const [imageUrls, setImageUrls] = useState<string[]>([]);
-  const amenitiesOptions = FALLBACK_PROPERTY_OPTIONS.amenities;
   const [customAmenity, setCustomAmenity] = useState("");
   const [developers, setDevelopers] = useState<
     Array<{ _id: string; name: string; slug: string }>
@@ -88,22 +88,28 @@ export default function AddPropertyPage() {
           setDevelopers(developersResponse.developers);
         }
         if (optionsResponse.success && optionsResponse.data) {
+          const data = optionsResponse.data;
           setFormOptions({
-            categories:
-              optionsResponse.data.categories ||
+            categories: normalizeSelectOptions(
+              data.categories,
               FALLBACK_PROPERTY_OPTIONS.categories,
-            propertyTypes:
-              optionsResponse.data.propertyTypes ||
+            ),
+            propertyTypes: normalizeSelectOptions(
+              data.propertyTypes,
               FALLBACK_PROPERTY_OPTIONS.propertyTypes,
-            statuses:
-              optionsResponse.data.statuses ||
+            ),
+            statuses: normalizeSelectOptions(
+              data.statuses,
               FALLBACK_PROPERTY_OPTIONS.statuses,
-            amenities:
-              optionsResponse.data.amenities ||
+            ),
+            amenities: normalizeSelectOptions(
+              data.amenities,
               FALLBACK_PROPERTY_OPTIONS.amenities,
-            locations:
-              optionsResponse.data.locations ||
+            ),
+            locations: normalizeSelectOptions(
+              data.locations,
               FALLBACK_PROPERTY_OPTIONS.locations,
+            ),
           });
         }
       } catch (error) {
@@ -117,6 +123,20 @@ export default function AddPropertyPage() {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSelectChange = (name: string, value: string) => {
+    if (name === "category" && value !== "off_plan") {
+      setFormData((prev) => ({
+        ...prev,
+        category: value,
+        developerName: "",
+        developerSlug: "",
+      }));
+      return;
+    }
+
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -294,26 +314,47 @@ export default function AddPropertyPage() {
                 <Label className="font-semibold text-slate-900">
                   Category *
                 </Label>
-                <Input
-                  name="category"
-                  placeholder="e.g. For Sale (for_sale)"
+                <Select
                   value={formData.category}
-                  onChange={handleChange}
-                  required
-                />
+                  onValueChange={(val) => handleSelectChange("category", val)}
+                >
+                  <SelectTrigger className="w-full bg-white border-slate-200">
+                    <SelectValue placeholder="Select Category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {formOptions.categories.map((category) => (
+                      <SelectItem key={category.value} value={category.value}>
+                        {category.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="space-y-2">
                 <Label className="font-semibold text-slate-900">
                   Property Type *
                 </Label>
-                <Input
-                  name="propertyType"
-                  placeholder="e.g. Apartment (apartment)"
+                <Select
                   value={formData.propertyType}
-                  onChange={handleChange}
-                  required
-                />
+                  onValueChange={(val) =>
+                    handleSelectChange("propertyType", val)
+                  }
+                >
+                  <SelectTrigger className="w-full bg-white border-slate-200">
+                    <SelectValue placeholder="Select Property Type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {formOptions.propertyTypes.map((propertyType) => (
+                      <SelectItem
+                        key={propertyType.value}
+                        value={propertyType.value}
+                      >
+                        {propertyType.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="space-y-2">
@@ -342,23 +383,40 @@ export default function AddPropertyPage() {
                 <Label className="font-semibold text-slate-900">
                   Location *
                 </Label>
-                <Input
-                  name="location"
-                  placeholder="e.g. Downtown Dubai"
+                <Select
                   value={formData.location}
-                  onChange={handleChange}
-                  required
-                />
+                  onValueChange={(val) => handleSelectChange("location", val)}
+                >
+                  <SelectTrigger className="w-full bg-white border-slate-200">
+                    <SelectValue placeholder="Select Location" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {formOptions.locations.map((item) => (
+                      <SelectItem key={item.value} value={item.value}>
+                        {item.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="space-y-2">
                 <Label className="font-semibold text-slate-900">Status</Label>
-                <Input
-                  name="status"
-                  placeholder="e.g. Available"
+                <Select
                   value={formData.status}
-                  onChange={handleChange}
-                />
+                  onValueChange={(val) => handleSelectChange("status", val)}
+                >
+                  <SelectTrigger className="w-full bg-white border-slate-200">
+                    <SelectValue placeholder="Select Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {formOptions.statuses.map((status) => (
+                      <SelectItem key={status.value} value={status.value}>
+                        {status.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </div>
@@ -481,7 +539,7 @@ export default function AddPropertyPage() {
             </h2>
 
             <div className="flex flex-wrap gap-2">
-              {amenitiesOptions.map((amenity) => (
+              {formOptions.amenities.map((amenity) => (
                 <button
                   key={amenity.value}
                   type="button"

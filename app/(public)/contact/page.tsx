@@ -29,7 +29,11 @@ import {
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import api from "@/lib/api";
-import { FALLBACK_PROPERTY_OPTIONS, SelectOption } from "@/constants/form-options";
+import {
+  FALLBACK_PROPERTY_OPTIONS,
+  normalizeSelectOptions,
+  SelectOption,
+} from "@/constants/form-options";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -49,8 +53,13 @@ export default function Contact() {
     const loadOptions = async () => {
       try {
         const response = await api.getPropertyFormOptions();
-        if (response.success && response.data?.inquiryTypes) {
-          setInquiryTypes(response.data.inquiryTypes);
+        if (response.success && response.data) {
+          setInquiryTypes(
+            normalizeSelectOptions(
+              response.data.inquiryTypes,
+              FALLBACK_PROPERTY_OPTIONS.inquiryTypes,
+            ),
+          );
         }
       } catch {
         // Keep fallback types

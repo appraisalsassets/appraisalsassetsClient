@@ -5,6 +5,28 @@ export type SelectOption = {
   label: string;
 };
 
+/** Mongoose returns [] for enumValues on plain String fields; treat that as missing. */
+export function normalizeSelectOptions(
+  options: SelectOption[] | undefined | null,
+  fallback: SelectOption[],
+): SelectOption[] {
+  return options?.length ? options : fallback;
+}
+
+/** Keep edit forms working when DB has a value not in the current option list. */
+export function withCurrentSelectOption(
+  options: SelectOption[],
+  value: string | undefined,
+): SelectOption[] {
+  if (!value || options.some((option) => option.value === value)) {
+    return options;
+  }
+  const label = value
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+  return [...options, { value, label }];
+}
+
 export const FALLBACK_PROPERTY_OPTIONS = {
   categories: [
     { value: "for_sale", label: "For Sale" },

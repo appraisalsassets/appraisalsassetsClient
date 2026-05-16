@@ -24,7 +24,9 @@ import {
 } from '@/components/ui/select';
 import {
   FALLBACK_PROPERTY_OPTIONS,
+  normalizeSelectOptions,
   SelectOption,
+  withCurrentSelectOption,
 } from "@/constants/form-options";
 
 export default function EditPropertyPage() {
@@ -97,13 +99,28 @@ export default function EditPropertyPage() {
         setDevelopers(developersResponse.developers);
       }
       if (optionsResponse.success && optionsResponse.data) {
+        const data = optionsResponse.data;
         setFormOptions({
-          categories: optionsResponse.data.categories || FALLBACK_PROPERTY_OPTIONS.categories,
-          propertyTypes:
-            optionsResponse.data.propertyTypes || FALLBACK_PROPERTY_OPTIONS.propertyTypes,
-          statuses: optionsResponse.data.statuses || FALLBACK_PROPERTY_OPTIONS.statuses,
-          amenities: optionsResponse.data.amenities || FALLBACK_PROPERTY_OPTIONS.amenities,
-          locations: optionsResponse.data.locations || FALLBACK_PROPERTY_OPTIONS.locations,
+          categories: normalizeSelectOptions(
+            data.categories,
+            FALLBACK_PROPERTY_OPTIONS.categories,
+          ),
+          propertyTypes: normalizeSelectOptions(
+            data.propertyTypes,
+            FALLBACK_PROPERTY_OPTIONS.propertyTypes,
+          ),
+          statuses: normalizeSelectOptions(
+            data.statuses,
+            FALLBACK_PROPERTY_OPTIONS.statuses,
+          ),
+          amenities: normalizeSelectOptions(
+            data.amenities,
+            FALLBACK_PROPERTY_OPTIONS.amenities,
+          ),
+          locations: normalizeSelectOptions(
+            data.locations,
+            FALLBACK_PROPERTY_OPTIONS.locations,
+          ),
         });
       }
     } catch (error) {
@@ -351,7 +368,10 @@ export default function EditPropertyPage() {
                     <SelectValue placeholder="Select Category" />
                   </SelectTrigger>
                   <SelectContent>
-                    {formOptions.categories.map((category) => (
+                    {withCurrentSelectOption(
+                      formOptions.categories,
+                      formData.category,
+                    ).map((category) => (
                       <SelectItem key={category.value} value={category.value}>
                         {category.label}
                       </SelectItem>
@@ -370,7 +390,10 @@ export default function EditPropertyPage() {
                     <SelectValue placeholder="Select Type" />
                   </SelectTrigger>
                   <SelectContent>
-                    {formOptions.propertyTypes.map((propertyType) => (
+                    {withCurrentSelectOption(
+                      formOptions.propertyTypes,
+                      formData.propertyType,
+                    ).map((propertyType) => (
                       <SelectItem key={propertyType.value} value={propertyType.value}>
                         {propertyType.label}
                       </SelectItem>
@@ -383,7 +406,7 @@ export default function EditPropertyPage() {
                 <div className="space-y-2">
                   <Label className="font-semibold text-slate-900">Developer *</Label>
                   <Select
-                    value={formData.developerSlug || ""}
+                    value={formData.developerSlug || undefined}
                     onValueChange={(val) => handleSelectChange("developerSlug", val)}
                   >
                     <SelectTrigger className="w-full bg-white border-slate-200">
@@ -410,7 +433,10 @@ export default function EditPropertyPage() {
                     <SelectValue placeholder="Select Location" />
                   </SelectTrigger>
                   <SelectContent>
-                    {formOptions.locations.map((item) => (
+                    {withCurrentSelectOption(
+                      formOptions.locations,
+                      formData.location,
+                    ).map((item) => (
                       <SelectItem key={item.value} value={item.value}>
                         {item.label}
                       </SelectItem>
@@ -429,7 +455,10 @@ export default function EditPropertyPage() {
                     <SelectValue placeholder="Select Status" />
                   </SelectTrigger>
                   <SelectContent>
-                    {formOptions.statuses.map((status) => (
+                    {withCurrentSelectOption(
+                      formOptions.statuses,
+                      formData.status,
+                    ).map((status) => (
                       <SelectItem key={status.value} value={status.value}>
                         {status.label}
                       </SelectItem>

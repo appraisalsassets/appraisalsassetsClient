@@ -16,7 +16,11 @@ import { Send, Loader2, CheckCircle2, Phone } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import api from "@/lib/api";
-import { FALLBACK_PROPERTY_OPTIONS, SelectOption } from "@/constants/form-options";
+import {
+  FALLBACK_PROPERTY_OPTIONS,
+  normalizeSelectOptions,
+  SelectOption,
+} from "@/constants/form-options";
 
 interface Property {
   title?: string;
@@ -46,8 +50,13 @@ export default function InquiryForm({ property }: InquiryFormProps) {
     const loadOptions = async () => {
       try {
         const response = await api.getPropertyFormOptions();
-        if (response.success && response.data?.inquiryTypes) {
-          setInquiryTypes(response.data.inquiryTypes);
+        if (response.success && response.data) {
+          setInquiryTypes(
+            normalizeSelectOptions(
+              response.data.inquiryTypes,
+              FALLBACK_PROPERTY_OPTIONS.inquiryTypes,
+            ),
+          );
         }
       } catch (error) {
         // Keep fallback types
