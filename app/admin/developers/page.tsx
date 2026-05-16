@@ -351,6 +351,9 @@ export default function AdminDevelopersPage() {
 
             <div className="space-y-1.5">
               <Label>Logo</Label>
+              <p className="text-xs text-slate-500">
+                Shown on the public Trusted Partners page when uploaded.
+              </p>
               <Input type="file" accept="image/*" onChange={(e) => setLogoFile(e.target.files?.[0] || null)} />
             </div>
             <div className="space-y-1.5">

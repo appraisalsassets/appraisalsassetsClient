@@ -142,6 +142,7 @@ export default function Footer() {
                 { label: "About Us", href: "/about" },
                 { label: "Contact", href: "/contact" },
                 { label: "Off-Plan Developers", href: "/developers" },
+                { label: "Trusted Partners", href: "/trusted-partners" },
               ].map((item) => (
                 <li key={item.href}>
                   <Link
