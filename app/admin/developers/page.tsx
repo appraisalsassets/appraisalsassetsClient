@@ -20,6 +20,7 @@ import {
 import { Edit, Plus, Trash2, X } from "lucide-react";
 
 interface Developer {
+  id?: string;
   _id: string;
   name: string;
   slug: string;
@@ -43,6 +44,10 @@ const initialForm = {
   displayOrder: "0",
   isActive: true,
 };
+
+function developerId(developer: Developer) {
+  return String(developer.id ?? developer._id ?? "");
+}
 
 export default function AdminDevelopersPage() {
   const [developers, setDevelopers] = useState<Developer[]>([]);
@@ -80,7 +85,7 @@ export default function AdminDevelopersPage() {
   };
 
   const startEdit = (developer: Developer) => {
-    setEditingId(developer._id);
+    setEditingId(developerId(developer));
     setForm({
       name: developer.name || "",
       shortDescription: developer.shortDescription || "",
@@ -128,7 +133,9 @@ export default function AdminDevelopersPage() {
       fetchDevelopers();
     } catch (error) {
       console.error("Save developer error:", error);
-      toast.error("Failed to save developer");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to save developer",
+      );
     } finally {
       setSaving(false);
     }
@@ -146,7 +153,9 @@ export default function AdminDevelopersPage() {
       if (editingId === id) resetForm();
     } catch (error) {
       console.error("Delete developer error:", error);
-      toast.error("Failed to delete developer");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to delete developer",
+      );
     }
   };
 
@@ -180,7 +189,7 @@ export default function AdminDevelopersPage() {
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {developers.map((developer) => (
-                    <tr key={developer._id} className="hover:bg-slate-50">
+                    <tr key={developerId(developer)} className="hover:bg-slate-50">
                       <td className="p-4">
                         <div className="flex items-center gap-3">
                           {developer.logo ? (
@@ -236,7 +245,9 @@ export default function AdminDevelopersPage() {
                               </AlertDialogHeader>
                               <AlertDialogFooter>
                                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={() => handleDelete(developer._id)}>
+                                <AlertDialogAction
+                                  onClick={() => handleDelete(developerId(developer))}
+                                >
                                   Delete
                                 </AlertDialogAction>
                               </AlertDialogFooter>

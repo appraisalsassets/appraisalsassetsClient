@@ -28,9 +28,46 @@ import {
 import { Edit, Plus, Trash2, X, Building2, MapPin, Home } from "lucide-react";
 
 interface Developer {
+  id?: string;
   _id: string;
   name: string;
   slug: string;
+}
+
+function developerId(developer: Developer) {
+  return String(developer.id ?? developer._id ?? "");
+}
+
+function mapPropertyToProject(property: Record<string, any>): DeveloperProject {
+  const size = Number(property.sizeSqft) || 0;
+  const imageList = (property.images || []).map((img: { url?: string } | string) =>
+    typeof img === "string" ? img : img.url || "",
+  );
+
+  return {
+    _id: String(property.id ?? property._id ?? ""),
+    title: property.title || "",
+    description: property.description || "",
+    developerId: "",
+    developerName: property.developerName || "",
+    developerSlug: property.developerSlug || "",
+    location: property.location || "",
+    propertyType: property.propertyType || "",
+    price: property.price || { amount: 0, currency: "AED" },
+    sizeFrom: size,
+    sizeTo: size,
+    bedroomsFrom: property.bedrooms,
+    bedroomsTo: property.bedrooms,
+    status: property.status || "available",
+    images: imageList.filter(Boolean),
+    featured: Boolean(property.isFeatured),
+    completionDate: "",
+    handoverDate: "",
+    amenities: property.amenities || [],
+    email: property.contactEmail || "",
+    createdAt: property.createdAt || "",
+    updatedAt: property.updatedAt || "",
+  };
 }
 
 interface DeveloperProject {
@@ -99,19 +136,26 @@ export default function AdminDeveloperProjectsPage() {
   const fetchData = async () => {
     try {
       const [projectsRes, developersRes] = await Promise.all([
-        api.getDeveloperProjects(),
-        api.getDevelopers(),
+        api.getProperties({ category: "off_plan", limit: "500" }),
+        api.getDevelopersAdmin(),
       ]);
 
       if (projectsRes.success) {
-        setProjects(projectsRes.projects || []);
+        const list = projectsRes.properties || projectsRes.data || [];
+        setProjects(
+          (Array.isArray(list) ? list : []).map((item) =>
+            mapPropertyToProject(item),
+          ),
+        );
       }
 
       if (developersRes.success) {
         setDevelopers(developersRes.developers || []);
       }
     } catch (error) {
-      toast.error("Failed to fetch data");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to fetch data",
+      );
     } finally {
       setLoading(false);
     }
@@ -127,58 +171,80 @@ export default function AdminDeveloperProjectsPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!form.developerId) {
+      toast.error("Please select a developer");
+      return;
+    }
+
+    const selectedDeveloper = developers.find(
+      (developer) => developerId(developer) === form.developerId,
+    );
+    if (!selectedDeveloper) {
+      toast.error("Selected developer was not found");
+      return;
+    }
+
     setSaving(true);
 
     try {
       const formData = new FormData();
+      const locationKey =
+        form.location
+          .trim()
+          .toLowerCase()
+          .replace(/[\s-]+/g, "_")
+          .replace(/[^a-z0-9_]/g, "") || "downtown_dubai";
 
-      // Basic project info
-      formData.append("title", form.title);
-      formData.append("description", form.description);
-      formData.append("developerId", form.developerId);
-      formData.append("location", form.location);
-      formData.append("propertyType", form.propertyType);
-      formData.append("priceAmount", form.priceAmount);
-      formData.append("currency", form.currency);
-      formData.append("sizeFrom", form.sizeFrom);
-      formData.append("sizeTo", form.sizeTo);
-      formData.append("status", form.status);
-      formData.append("featured", String(form.featured));
+      const descriptionParts = [form.description.trim()];
+      if (form.completionDate) {
+        descriptionParts.push(`Completion: ${form.completionDate}`);
+      }
+      if (form.handoverDate) {
+        descriptionParts.push(`Handover: ${form.handoverDate}`);
+      }
 
-      // Optional fields
-      if (form.bedroomsFrom) formData.append("bedroomsFrom", form.bedroomsFrom);
-      if (form.bedroomsTo) formData.append("bedroomsTo", form.bedroomsTo);
-      if (form.completionDate)
-        formData.append("completionDate", form.completionDate);
-      if (form.handoverDate) formData.append("handoverDate", form.handoverDate);
-      if (form.amenities) formData.append("amenities", form.amenities);
-      if (form.email) formData.append("email", form.email);
+      const propertyStatus =
+        form.status === "sold_out"
+          ? "sold"
+          : form.status === "upcoming" || form.status === "under_construction"
+            ? "available"
+            : form.status;
 
-      // Images
+      formData.append("title", form.title.trim());
+      formData.append("description", descriptionParts.filter(Boolean).join("\n\n"));
+      formData.append("category", "off_plan");
+      formData.append("propertyType", form.propertyType === "mixed" ? "apartment" : form.propertyType);
+      formData.append("location", locationKey);
+      formData.append("status", propertyStatus);
+      formData.append("price", form.priceAmount);
+      formData.append("sizeSqft", form.sizeFrom || form.sizeTo);
+      formData.append("bedrooms", form.bedroomsFrom || form.bedroomsTo || "0");
+      formData.append("bathrooms", "0");
+      formData.append("developerName", selectedDeveloper.name);
+      formData.append("developerSlug", selectedDeveloper.slug);
+      formData.append("isFeatured", String(form.featured));
+      formData.append("isActive", "true");
+      formData.append("phone", "+971500000000");
+      formData.append("whatsAppNumber", "+971500000000");
+      if (form.email) formData.append("contactEmail", form.email);
+      if (form.amenities) {
+        form.amenities
+          .split(",")
+          .map((item) => item.trim())
+          .filter(Boolean)
+          .forEach((amenity) => formData.append("amenities", amenity));
+      }
+
       imageFiles.forEach((file) => {
         formData.append("images", file);
       });
 
-      const endpoint = editingId
-        ? `/admin/developer-projects/${editingId}`
-        : "/admin/developer-projects";
+      const response = editingId
+        ? await api.updateProperty(editingId, formData)
+        : await api.createProperty(formData);
 
-      const method = editingId ? "PUT" : "POST";
-
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}${endpoint}`,
-        {
-          method,
-          headers: {
-            Authorization: `Bearer ${api.getAccessToken()}`,
-          },
-          body: formData,
-        },
-      );
-
-      const result = await response.json();
-
-      if (result.success) {
+      if (response.success) {
         toast.success(
           editingId
             ? "Project updated successfully"
@@ -187,20 +253,26 @@ export default function AdminDeveloperProjectsPage() {
         resetForm();
         fetchData();
       } else {
-        toast.error(result.message || "Failed to save project");
+        toast.error(response.message || "Failed to save project");
       }
     } catch (error) {
-      toast.error("Failed to save project");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to save project",
+      );
     } finally {
       setSaving(false);
     }
   };
 
   const handleEdit = (project: DeveloperProject) => {
+    const linkedDeveloper = developers.find(
+      (developer) => developer.slug === project.developerSlug,
+    );
+
     setForm({
       title: project.title,
       description: project.description,
-      developerId: project.developerId,
+      developerId: linkedDeveloper ? developerId(linkedDeveloper) : project.developerId,
       location: project.location,
       propertyType: project.propertyType,
       priceAmount: String(project.price.amount),
@@ -223,7 +295,7 @@ export default function AdminDeveloperProjectsPage() {
 
   const handleDelete = async (id: string) => {
     try {
-      const response = await api.deleteDeveloperProject(id);
+      const response = await api.deleteProperty(id);
       if (response.success) {
         toast.success("Project deleted successfully");
         fetchData();
@@ -231,7 +303,9 @@ export default function AdminDeveloperProjectsPage() {
         toast.error(response.message || "Failed to delete project");
       }
     } catch (error) {
-      toast.error("Failed to delete project");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to delete project",
+      );
     }
   };
 
@@ -474,7 +548,10 @@ export default function AdminDeveloperProjectsPage() {
                     </SelectTrigger>
                     <SelectContent>
                       {developers.map((developer) => (
-                        <SelectItem key={developer._id} value={developer._id}>
+                        <SelectItem
+                          key={developerId(developer)}
+                          value={developerId(developer)}
+                        >
                           {developer.name}
                         </SelectItem>
                       ))}

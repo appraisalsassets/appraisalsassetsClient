@@ -245,7 +245,7 @@ class ApiClient {
       credentials: "include",
     });
 
-    return response.json();
+    return this.parseFetchResponse(response);
   }
 
   async updateProperty(id: string, formData: FormData) {
@@ -299,7 +299,7 @@ class ApiClient {
       credentials: "include",
     });
 
-    return response.json();
+    return this.parseFetchResponse(response);
   }
 
   async updateDeveloper(id: string, formData: FormData) {
@@ -315,7 +315,7 @@ class ApiClient {
       credentials: "include",
     });
 
-    return response.json();
+    return this.parseFetchResponse(response);
   }
 
   async deleteDeveloper(id: string) {

@@ -80,7 +80,7 @@ export default function AddPropertyPage() {
     const fetchDevelopersAndOptions = async () => {
       try {
         const [developersResponse, optionsResponse] = await Promise.all([
-          api.getDevelopers(),
+          api.getDevelopersAdmin(),
           api.getPropertyFormOptions(),
         ]);
         if (developersResponse.success && developersResponse.developers) {
