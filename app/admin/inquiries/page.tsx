@@ -36,9 +36,16 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Search, Phone, Mail, Trash2 } from "lucide-react";
-import { format } from "date-fns";
 import { toast } from "sonner";
 import api from "@/lib/api";
+
+function formatInquiryDate(value: string | Date) {
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(new Date(value));
+}
 
 interface Inquiry {
   id: string;
@@ -286,7 +293,7 @@ export default function AdminInquiriesUI() {
 
                   <TableCell>
                     {inquiry.created_date
-                      ? format(new Date(inquiry.created_date), "MMM d, yyyy")
+                      ? formatInquiryDate(inquiry.created_date)
                       : "No Date"}
                   </TableCell>
 

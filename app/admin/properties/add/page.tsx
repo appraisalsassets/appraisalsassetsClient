@@ -565,7 +565,7 @@ export default function AddPropertyPage() {
               ))}
               {formData.amenities
                 .filter(
-                  (a) => !amenitiesOptions.some((opt) => opt.value === a),
+                  (a) => !formOptions.amenities.some((opt) => opt.value === a),
                 )
                 .map((value) => (
                   <button
