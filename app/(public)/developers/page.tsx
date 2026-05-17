@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Building2, Search, MapPin, ArrowRight, Loader2 } from "lucide-react";
 import api from "@/lib/api";
+import PageHero from "@/components/layout/PageHero";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
@@ -63,47 +64,17 @@ export default function DevelopersPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* Hero */}
-      <section className="relative mt-28 min-h-[42vh] bg-primary-dark flex items-center overflow-hidden">
-        <div className="absolute inset-0 opacity-25">
-          <Image
-            src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=2000"
-            alt="Dubai development"
-            fill
-            className="object-cover"
-            priority
-          />
-        </div>
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
-          <motion.span
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="inline-block px-4 py-2 bg-[#C1A06E]/20 border border-[#C1A06E]/40 rounded-full text-[#C1A06E] text-sm font-medium mb-6"
-          >
+      <PageHero
+        title="Trusted Developers in Dubai"
+        description="Explore leading off-plan developers and the communities they are building. View profiles, projects, and connect with our team for expert guidance."
+        backgroundImage="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=2000"
+        backgroundAlt="Dubai development"
+        badge={
+          <span className="mb-4 inline-block rounded-full border border-[#C1A06E]/40 bg-[#C1A06E]/20 px-4 py-2 text-sm font-medium text-[#C1A06E]">
             Off-Plan Developers
-          </motion.span>
-          <motion.h1
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4"
-          >
-            Trusted Developers in Dubai
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto"
-          >
-            Explore leading off-plan developers and the communities they are
-            building. View profiles, projects, and connect with our team for
-            expert guidance.
-          </motion.p>
-        </div>
-      </section>
-
+          </span>
+        }
+      />
       {/* Content */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
         {/* Search */}

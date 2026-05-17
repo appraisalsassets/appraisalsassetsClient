@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { ArrowRight, LayoutGrid, List, Loader2 } from "lucide-react";
 import PropertyFilters from "./PropertyFilters";
+import PageHero from "@/components/layout/PageHero";
 import PropertyCard from "../utils/PropertyCard";
 import SaveSearchDialog from "./SaveSearchDialog";
 import { Property } from "@/types/property";
@@ -221,17 +222,7 @@ export default function PropertiesPage({
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Hero */}
-      <div className="bg-secondary h-[55vh] lg:h-[60vh]  flex items-center justify-center relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <h1 className="text-xl sm:text-2xl mt-20 md:text-3xl lg:text-4xl xl:text-5xl font-bold text-white mb-2 sm:mb-3">
-            {pageTitle}
-          </h1>
-          <p className="text-gray-300 text-xs sm:text-sm md:text-base lg:text-lg max-w-2xl">
-            {pageDescription}
-          </p>
-        </div>
-      </div>
+      <PageHero title={pageTitle} description={pageDescription} />
 
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 -mt-8">

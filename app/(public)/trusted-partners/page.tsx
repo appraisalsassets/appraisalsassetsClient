@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Handshake, Loader2 } from "lucide-react";
 import api from "@/lib/api";
+import PageHero from "@/components/layout/PageHero";
 import { Button } from "@/components/ui/button";
 
 type PartnerDeveloper = {
@@ -66,50 +66,18 @@ export default function TrustedPartnersPage() {
       className="min-h-screen bg-slate-50"
     >
       {/* Hero */}
-      <section className="relative mt-28 min-h-[38vh] bg-primary-dark flex items-center overflow-hidden">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.25 }}
-          transition={{ duration: 0.8 }}
-          className="absolute inset-0"
-        >
-          <Image
-            src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=2000"
-            alt="Dubai skyline"
-            fill
-            className="object-cover"
-            priority
-          />
-        </motion.div>
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
-          <motion.span
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#C1A06E]/20 text-[#C1A06E] text-sm font-medium mb-4"
-          >
-            <Handshake className="w-4 h-4" />
+      <PageHero
+        title="Trusted Partners"
+        description="We collaborate with leading Dubai developers. Partner logos are managed from the admin panel and shown here when uploaded."
+        backgroundImage="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=2000"
+        backgroundAlt="Dubai skyline"
+        badge={
+          <span className="mb-4 inline-flex items-center justify-center gap-2 rounded-full bg-[#C1A06E]/20 px-4 py-1.5 text-sm font-medium text-[#C1A06E]">
+            <Handshake className="h-4 w-4" />
             Off-Plan Developers
-          </motion.span>
-          <motion.h1
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4"
-          >
-            Trusted Partners
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-slate-300 text-lg max-w-2xl mx-auto"
-          >
-            We collaborate with leading Dubai developers. Partner logos are managed
-            from the admin panel and shown here when uploaded.
-          </motion.p>
-        </div>
-      </section>
+          </span>
+        }
+      />
 
       {/* Logos */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">

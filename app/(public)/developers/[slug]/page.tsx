@@ -131,7 +131,7 @@ export default function DeveloperProfilePage() {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Hero */}
-      <section className="relative mt-14 min-h-[60vh] md:min-h-[65vh] flex flex-col justify-end overflow-hidden">
+      <section className="relative flex h-[55vh] flex-col justify-end overflow-hidden lg:h-[60vh]">
         <div className="absolute inset-0">
           {developer.heroImage ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -146,7 +146,7 @@ export default function DeveloperProfilePage() {
           <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-black/20" />
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-16 pt-28 md:pb-20">
+        <div className="relative z-10 mx-auto w-full max-w-7xl px-4 pb-10 pt-20 sm:px-6 lg:px-8 md:pb-12">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}

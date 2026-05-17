@@ -14,6 +14,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import PageHero from "@/components/layout/PageHero";
 
 const values = [
   {
@@ -55,37 +56,17 @@ export default function About() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <div className="relative h-screen mt-32 bg-primary-dark py-40 overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          <Image
-            src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&q=80&w=2000"
-            alt="Dubai Skyline"
-            fill
-            className="object-cover bg-center"
-            priority
-          />
-        </div>
-        <div className="relative z-10 max-w-7xl mx-auto px-4 lg:px-8 h-full flex items-center justify-center text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="max-w-4xl"
-          >
-            <span className="inline-block px-4 py-2 bg-[#C5A572]/20 border border-[#C5A572]/30 rounded-full text-[#C5A572] text-sm font-medium mb-6">
-              About Luxe Properties
-            </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-              Dubai&#39;s Leading Real Estate Agency
-              <span className="text-[#C5A572] block">& Advisory Firm</span>
-            </h1>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-              Trusted real estate agents in Dubai offering expert property,
-              investment, and management solutions across the UAE.
-            </p>
-          </motion.div>
-        </div>
-      </div>
+      <PageHero
+        title="Dubai's Leading Real Estate Agency & Advisory Firm"
+        description="Trusted real estate agents in Dubai offering expert property, investment, and management solutions across the UAE."
+        backgroundImage="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&q=80&w=2000"
+        backgroundAlt="Dubai Skyline"
+        badge={
+          <span className="mb-4 inline-block rounded-full border border-[#C5A572]/30 bg-[#C5A572]/20 px-4 py-2 text-sm font-medium text-[#C5A572]">
+            About Luxe Properties
+          </span>
+        }
+      />
 
       {/* About Content */}
       <section className="py-20 bg-white">

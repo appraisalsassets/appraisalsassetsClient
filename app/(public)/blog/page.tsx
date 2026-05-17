@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import api from "@/lib/api";
+import PageHero from "@/components/layout/PageHero";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
@@ -82,29 +83,14 @@ export default function BlogPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <section className="bg-secondary py-20 px-4 mt-28">
-        <div className="max-w-6xl mx-auto text-center">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-5xl font-bold text-white mb-4"
-          >
-            Blog & Insights
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-lg text-slate-400 max-w-2xl mx-auto"
-          >
-            Stay informed with the latest Dubai real estate news, market trends, and expert investment insights.
-          </motion.p>
-        </div>
-      </section>
+      <PageHero
+        title="Blog & Insights"
+        description="Stay informed with the latest Dubai real estate news, market trends, and expert investment insights."
+        contentClassName="max-w-6xl"
+      />
 
       {/* Filters */}
-      <section className="max-w-6xl mx-auto px-4 -mt-6">
+      <section className="max-w-6xl mx-auto px-4 -mt-8">
         <div className="bg-white rounded-xl shadow-lg border border-slate-100 p-4 flex flex-col sm:flex-row items-center gap-4">
           <div className="relative flex-1 w-full">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -29,6 +28,7 @@ import {
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import api from "@/lib/api";
+import PageHero from "@/components/layout/PageHero";
 import {
   FALLBACK_PROPERTY_OPTIONS,
   normalizeSelectOptions,
@@ -97,38 +97,17 @@ export default function Contact() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero */}
-      <div className="relative h-[55vh] lg:h-[60vh] mt-36 bg-primary-dark py-24 overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          <Image
-            src="https://images.unsplash.com/photo-1582672060674-bc2bd808a8b5?auto=format&fit=crop&q=80&w=2000"
-            alt="Dubai"
-            fill
-            className="object-cover"
-          />
-        </div>
-        <div className="relative z-10 max-w-7xl mx-auto px-4 lg:px-8 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <span className="inline-block px-4 py-2 bg-[#C1A06E]/20 border border-[#C1A06E]/30 rounded-full text-[#C1A06E] text-sm font-medium mb-6">
-              Get In Touch
-            </span>
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              Contact Information
-            </h1>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-              Visit our office or reach out through any of our channels. Our
-              professional real estate agents in Dubai are available 7 days a
-              week to assist you with property inquiries, investments, and real
-              estate management Dubai. We are committed to delivering reliable
-              and responsive real estate services in Dubai.
-            </p>
-          </motion.div>
-        </div>
-      </div>
+      <PageHero
+        title="Contact Information"
+        description="Visit our office or reach out through any of our channels. Our professional real estate agents in Dubai are available 7 days a week to assist you with property inquiries, investments, and real estate management."
+        backgroundImage="https://images.unsplash.com/photo-1582672060674-bc2bd808a8b5?auto=format&fit=crop&q=80&w=2000"
+        backgroundAlt="Dubai"
+        badge={
+          <span className="mb-4 inline-block rounded-full border border-[#C1A06E]/30 bg-[#C1A06E]/20 px-4 py-2 text-sm font-medium text-[#C1A06E]">
+            Get In Touch
+          </span>
+        }
+      />
 
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 lg:px-8">
