@@ -85,9 +85,7 @@ export default function PropertyCard({
 }: PropertyCardProps) {
   const coverImage =
     property.images.find((img) => img.isCover)?.url || property.images[0]?.url;
-  const imageUrl =
-    coverImage ||
-    "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=800";
+  const imageUrl = coverImage || "";
 
   const handleWhatsAppClick = (e: React.MouseEvent) => {
     e.preventDefault();

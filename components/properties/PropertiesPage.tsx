@@ -18,7 +18,7 @@ import PropertyFilters from "./PropertyFilters";
 import PageHero from "@/components/layout/PageHero";
 import PropertyCard from "../utils/PropertyCard";
 import SaveSearchDialog from "./SaveSearchDialog";
-import { Property } from "@/types/property";
+import { Property, getPropertyImage } from "@/types/property";
 import { LOCATION_LABELS } from "@/constants/locations";
 
 interface PropertiesPageProps {
@@ -321,11 +321,7 @@ export default function PropertiesPage({
               <PropertyCard
                 key={property._id}
                 id={property._id}
-                image={
-                  property.images?.find((img) => img.isCover)?.url ||
-                  property.images?.[0]?.url ||
-                  "/placeholder-property.jpg"
-                }
+                image={getPropertyImage(property)}
                 title={property.title}
                 price={`${property.price?.currency} ${property.price?.amount?.toLocaleString()}`}
                 location={property.location}
@@ -350,11 +346,7 @@ export default function PropertiesPage({
               <PropertyCard
                 key={property._id}
                 id={property._id}
-                image={
-                  property.images?.find((img) => img.isCover)?.url ||
-                  property.images?.[0]?.url ||
-                  "/placeholder-property.jpg"
-                }
+                image={getPropertyImage(property)}
                 title={property.title}
                 price={`${property.price?.currency} ${property.price?.amount?.toLocaleString()}`}
                 location={property.location}

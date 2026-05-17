@@ -13,12 +13,7 @@ export default function ImageGallery({ images = [] }: ImageGalleryProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showFullscreen, setShowFullscreen] = useState(false);
 
-  const displayImages =
-    images.length > 0
-      ? images
-      : [
-          "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=1200",
-        ];
+  const displayImages = images.length > 0 ? images : [];
 
   const next = () => {
     setCurrentIndex((prev) => (prev + 1) % displayImages.length);
@@ -33,6 +28,16 @@ export default function ImageGallery({ images = [] }: ImageGalleryProps) {
   const getImageUrl = (img: string | { url: string }): string => {
     return typeof img === "string" ? img : img.url;
   };
+
+  if (displayImages.length === 0) {
+    return (
+      <div className="relative rounded-2xl overflow-hidden border border-slate-200 bg-slate-100">
+        <div className="aspect-video flex items-center justify-center text-slate-500">
+          No images uploaded for this property
+        </div>
+      </div>
+    );
+  }
 
   const currentImage =
     getImageUrl(displayImages[currentIndex]) || getImageUrl(displayImages[0]);

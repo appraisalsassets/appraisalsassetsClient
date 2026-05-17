@@ -28,6 +28,7 @@ import {
   SelectOption,
   withCurrentSelectOption,
 } from "@/constants/form-options";
+import { isOffPlanCategory } from "@/lib/propertyCategory";
 
 export default function EditPropertyPage() {
   const router = useRouter();
@@ -187,31 +188,45 @@ export default function EditPropertyPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => {
+      const next = { ...prev, [name]: value };
+      if (name === "category" && !isOffPlanCategory(value)) {
+        next.developerName = "";
+        next.developerSlug = "";
+      }
+      return next;
+    });
+  };
+
+  const handleDeveloperSelect = (value: string) => {
+    if (value === "none") {
+      setFormData((prev) => ({
+        ...prev,
+        developerName: "",
+        developerSlug: "",
+      }));
+      return;
+    }
+    const selected = developers.find((developer) => developer.slug === value);
+    setFormData((prev) => ({
+      ...prev,
+      developerSlug: value,
+      developerName: selected?.name || "",
+      category: "off_plan",
+    }));
+    toast.info(
+      "Category set to Off-Plan so this property appears under the developer.",
+    );
   };
 
   const handleSelectChange = (name: string, value: string) => {
-    if (name === "category" && value !== "off_plan") {
+    if (name === "category" && !isOffPlanCategory(value)) {
       setFormData((prev) => ({
         ...prev,
         category: value,
         developerName: "",
         developerSlug: "",
       }));
-      return;
-    }
-
-    if (name === "developerSlug") {
-      const selected = developers.find((developer) => developer.slug === value);
-      setFormData((prev) => ({
-        ...prev,
-        developerSlug: value,
-        developerName: selected?.name || "",
-        ...(value ? { category: "off_plan" as const } : {}),
-      }));
-      if (value) {
-        toast.info("Category set to Off-Plan so this property appears under the developer.");
-      }
       return;
     }
 
@@ -261,7 +276,7 @@ export default function EditPropertyPage() {
     setLoading(true);
 
     try {
-      if (formData.category === "off_plan" && !formData.developerSlug) {
+      if (isOffPlanCategory(formData.category) && !formData.developerSlug) {
         toast.error("Please select a developer for off-plan properties");
         setLoading(false);
         return;
@@ -360,89 +375,63 @@ export default function EditPropertyPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <Label className="font-semibold text-slate-900">Category *</Label>
-                <Select 
-                  value={formData.category} 
-                  onValueChange={(val) => handleSelectChange('category', val)}
-                >
-                  <SelectTrigger className="w-full bg-white border-slate-200">
-                    <SelectValue placeholder="Select Category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {withCurrentSelectOption(
-                      formOptions.categories,
-                      formData.category,
-                    ).map((category) => (
-                      <SelectItem key={category.value} value={category.value}>
-                        {category.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Input
+                  name="category"
+                  placeholder="e.g. for_sale or For Sale"
+                  value={formData.category}
+                  onChange={handleChange}
+                  required
+                />
               </div>
 
               <div className="space-y-2">
                 <Label className="font-semibold text-slate-900">Property Type *</Label>
-                 <Select 
-                  value={formData.propertyType} 
-                  onValueChange={(val) => handleSelectChange('propertyType', val)}
+                <Input
+                  name="propertyType"
+                  placeholder="e.g. apartment or Apartment"
+                  value={formData.propertyType}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label className="font-semibold text-slate-900">
+                  Developer
+                  {isOffPlanCategory(formData.category) ? " *" : " (optional)"}
+                </Label>
+                <Select
+                  value={formData.developerSlug || "none"}
+                  onValueChange={handleDeveloperSelect}
                 >
                   <SelectTrigger className="w-full bg-white border-slate-200">
-                    <SelectValue placeholder="Select Type" />
+                    <SelectValue placeholder="Select Developer" />
                   </SelectTrigger>
                   <SelectContent>
-                    {withCurrentSelectOption(
-                      formOptions.propertyTypes,
-                      formData.propertyType,
-                    ).map((propertyType) => (
-                      <SelectItem key={propertyType.value} value={propertyType.value}>
-                        {propertyType.label}
+                    <SelectItem value="none">No developer</SelectItem>
+                    {developers.map((developer) => (
+                      <SelectItem key={developer._id} value={developer.slug}>
+                        {developer.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
+                {developers.length === 0 && (
+                  <p className="text-xs text-amber-700">
+                    No developers found. Add one under Admin → Developers.
+                  </p>
+                )}
               </div>
-
-              {formData.category === "off_plan" && (
-                <div className="space-y-2">
-                  <Label className="font-semibold text-slate-900">Developer *</Label>
-                  <Select
-                    value={formData.developerSlug || undefined}
-                    onValueChange={(val) => handleSelectChange("developerSlug", val)}
-                  >
-                    <SelectTrigger className="w-full bg-white border-slate-200">
-                      <SelectValue placeholder="Select Developer" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {developers.map((developer) => (
-                        <SelectItem key={developer._id} value={developer.slug}>
-                          {developer.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
 
               <div className="space-y-2">
                 <Label className="font-semibold text-slate-900">Location *</Label>
-                <Select 
-                  value={formData.location} 
-                  onValueChange={(val) => handleSelectChange('location', val)}
-                >
-                  <SelectTrigger className="w-full bg-white border-slate-200">
-                    <SelectValue placeholder="Select Location" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {withCurrentSelectOption(
-                      formOptions.locations,
-                      formData.location,
-                    ).map((item) => (
-                      <SelectItem key={item.value} value={item.value}>
-                        {item.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Input
+                  name="location"
+                  placeholder="e.g. downtown_dubai or Downtown Dubai"
+                  value={formData.location}
+                  onChange={handleChange}
+                  required
+                />
               </div>
 
               <div className="space-y-2">

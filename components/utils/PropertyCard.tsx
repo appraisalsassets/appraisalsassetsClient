@@ -5,11 +5,12 @@ import {
   MapPin,
   MessageCircle,
   Mail,
+  Building2,
 } from "lucide-react";
 import Link from "next/link";
 import { PropertyCardProps } from "@/types/property";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const locationLabels = {
   "dubai-marina": "Dubai Marina",
@@ -60,16 +61,14 @@ export default function PropertyCard({
   wrapInLink = true,
 }: PropertyCardProps) {
   const [imgError, setImgError] = useState(false);
-  const [imgSrc, setImgSrc] = useState(
-    image || "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=800"
-  );
+  const [imgSrc, setImgSrc] = useState(image?.trim() || "");
 
-  const handleImageError = () => {
-    if (!imgError) {
-      setImgError(true);
-      setImgSrc("https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=800");
-    }
-  };
+  useEffect(() => {
+    setImgSrc(image?.trim() || "");
+    setImgError(false);
+  }, [image]);
+
+  const showImagePlaceholder = !imgSrc || imgError;
   const handleWhatsAppClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -106,12 +105,18 @@ export default function PropertyCard({
     <div className="group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden h-full">
       {/* Property Image */}
       <div className="relative h-72 md:h-80 overflow-hidden">
-        <img
-          src={imgSrc}
-          alt={title || "Property"}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-          onError={handleImageError}
-        />
+        {showImagePlaceholder ? (
+          <div className="w-full h-full flex items-center justify-center bg-slate-200">
+            <Building2 className="w-16 h-16 text-slate-400" aria-hidden />
+          </div>
+        ) : (
+          <img
+            src={imgSrc}
+            alt={title || "Property"}
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+            onError={() => setImgError(true)}
+          />
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
 
         {category && (

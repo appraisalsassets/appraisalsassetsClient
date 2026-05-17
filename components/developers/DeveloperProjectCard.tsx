@@ -91,7 +91,7 @@ export default function DeveloperProjectCard({
   const href =
     detailHref ||
     `/developers/${project.developerSlug}/projects/${project._id}`;
-  const coverImage = project.images[0] || "/placeholder-property.jpg";
+  const coverImage = project.images[0] || "";
 
   const handleWhatsAppClick = (e: React.MouseEvent) => {
     e.preventDefault();

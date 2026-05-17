@@ -42,7 +42,7 @@ export interface Property {
 // PropertyCard Props Interface
 export interface PropertyCardProps {
   id?: string;
-  image: string;
+  image?: string;
   title: string;
   price: string;
   location: string;
@@ -110,7 +110,7 @@ export function getPropertyImage(property: Property): string {
     const coverImage = property.images.find((img) => img.isCover);
     return coverImage?.url || property.images[0].url;
   }
-  return "/placeholder-property.jpg";
+  return "";
 }
 
 // Helper function to format price

@@ -21,6 +21,7 @@ import {
   normalizeSelectOptions,
   SelectOption,
 } from "@/constants/form-options";
+import { isOffPlanCategory } from "@/lib/propertyCategory";
 
 export default function AddPropertyPage() {
   const router = useRouter();
@@ -123,11 +124,18 @@ export default function AddPropertyPage() {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => {
+      const next = { ...prev, [name]: value };
+      if (name === "category" && !isOffPlanCategory(value)) {
+        next.developerName = "";
+        next.developerSlug = "";
+      }
+      return next;
+    });
   };
 
   const handleSelectChange = (name: string, value: string) => {
-    if (name === "category" && value !== "off_plan") {
+    if (name === "category" && !isOffPlanCategory(value)) {
       setFormData((prev) => ({
         ...prev,
         category: value,
@@ -206,6 +214,18 @@ export default function AddPropertyPage() {
     setLoading(true);
 
     try {
+      if (isOffPlanCategory(formData.category) && !formData.developerSlug) {
+        toast.error("Please select a developer for off-plan properties");
+        setLoading(false);
+        return;
+      }
+
+      if (images.length === 0 && imageUrls.length === 0) {
+        toast.error("Please upload at least one image or add an image URL");
+        setLoading(false);
+        return;
+      }
+
       const data = new FormData();
 
       // Append text fields
@@ -252,7 +272,14 @@ export default function AddPropertyPage() {
       const response = await api.createProperty(data);
 
       if (response.success) {
-        toast.success("Property created successfully");
+        const savedImages = response.property?.images?.length ?? 0;
+        if (savedImages === 0 && images.length > 0) {
+          toast.warning(
+            "Property saved but images may not have uploaded. Check Cloudinary settings and try editing the property.",
+          );
+        } else {
+          toast.success("Property created successfully");
+        }
         router.push("/admin/properties");
       } else {
         toast.error(response.message || "Failed to create property");
@@ -314,47 +341,26 @@ export default function AddPropertyPage() {
                 <Label className="font-semibold text-slate-900">
                   Category *
                 </Label>
-                <Select
+                <Input
+                  name="category"
+                  placeholder="e.g. for_sale or For Sale"
                   value={formData.category}
-                  onValueChange={(val) => handleSelectChange("category", val)}
-                >
-                  <SelectTrigger className="w-full bg-white border-slate-200">
-                    <SelectValue placeholder="Select Category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {formOptions.categories.map((category) => (
-                      <SelectItem key={category.value} value={category.value}>
-                        {category.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  onChange={handleChange}
+                  required
+                />
               </div>
 
               <div className="space-y-2">
                 <Label className="font-semibold text-slate-900">
                   Property Type *
                 </Label>
-                <Select
+                <Input
+                  name="propertyType"
+                  placeholder="e.g. apartment or Apartment"
                   value={formData.propertyType}
-                  onValueChange={(val) =>
-                    handleSelectChange("propertyType", val)
-                  }
-                >
-                  <SelectTrigger className="w-full bg-white border-slate-200">
-                    <SelectValue placeholder="Select Property Type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {formOptions.propertyTypes.map((propertyType) => (
-                      <SelectItem
-                        key={propertyType.value}
-                        value={propertyType.value}
-                      >
-                        {propertyType.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  onChange={handleChange}
+                  required
+                />
               </div>
 
               <div className="space-y-2">
@@ -383,21 +389,13 @@ export default function AddPropertyPage() {
                 <Label className="font-semibold text-slate-900">
                   Location *
                 </Label>
-                <Select
+                <Input
+                  name="location"
+                  placeholder="e.g. downtown_dubai or Downtown Dubai"
                   value={formData.location}
-                  onValueChange={(val) => handleSelectChange("location", val)}
-                >
-                  <SelectTrigger className="w-full bg-white border-slate-200">
-                    <SelectValue placeholder="Select Location" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {formOptions.locations.map((item) => (
-                      <SelectItem key={item.value} value={item.value}>
-                        {item.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  onChange={handleChange}
+                  required
+                />
               </div>
 
               <div className="space-y-2">
