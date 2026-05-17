@@ -5,7 +5,6 @@ export const NAV_LINKS = [
   { name: "Sale", href: "/sale" },
   { name: "Rent", href: "/rent" },
   { name: "Off-Plan Developers", href: "/developers" },
-  { name: "Trusted Partners", href: "/trusted-partners" },
   { name: "About Us", href: "/about" },
   { name: "Blog", href: "/blog" },
   { name: "Contact", href: "/contact" },

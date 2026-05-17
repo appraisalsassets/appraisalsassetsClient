@@ -1,3 +1,5 @@
+import { normalizePropertyImageUrls } from "@/lib/propertyImages";
+
 /**
  * Map API Property documents to the shape expected by DeveloperProjectCard.
  */
@@ -6,18 +8,9 @@ export function mapPropertyToDeveloperProjectShape(
   slug: string,
   fallbackDeveloperName?: string,
 ) {
-  const imgs = Array.isArray(p.images)
-    ? (p.images as unknown[]).map((img: unknown) =>
-        typeof img === "string"
-          ? img
-          : typeof img === "object" &&
-              img !== null &&
-              "url" in img &&
-              typeof (img as { url: string }).url === "string"
-            ? (img as { url: string }).url
-            : "",
-      )
-    : [];
+  const imgs = normalizePropertyImageUrls(
+    Array.isArray(p.images) ? (p.images as Parameters<typeof normalizePropertyImageUrls>[0]) : [],
+  );
   const price = p.price as { amount?: number; currency?: string } | undefined;
   return {
     _id: String(p._id ?? ""),
@@ -36,11 +29,14 @@ export function mapPropertyToDeveloperProjectShape(
     bedroomsFrom: p.bedroomsFrom ?? p.bedrooms,
     bedroomsTo: p.bedroomsTo ?? p.bedrooms,
     status: p.status || "available",
-    images: imgs.filter(Boolean),
+    images: imgs,
     featured: p.isFeatured ?? p.featured ?? false,
     completionDate: p.completionDate,
     handoverDate: p.handoverDate,
     amenities: p.amenities || [],
+    phone: p.phone,
+    whatsAppNumber: p.whatsAppNumber,
+    contactEmail: p.contactEmail,
     createdAt: p.createdAt,
     updatedAt: p.updatedAt,
   };

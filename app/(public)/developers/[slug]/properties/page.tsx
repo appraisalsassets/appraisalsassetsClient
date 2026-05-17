@@ -82,10 +82,8 @@ export default function DeveloperPropertiesPage() {
           setDeveloper(developerResponse.developer || null);
         }
 
-        // Off-plan properties linked to this developer (Property model uses developerSlug + category off_plan)
         const propertiesResponse = await api.getProperties({
           developerSlug: slug,
-          category: "off_plan",
           activeOnly: "true",
           limit: "50",
         });

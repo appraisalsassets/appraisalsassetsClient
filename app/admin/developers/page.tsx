@@ -288,12 +288,15 @@ export default function AdminDevelopersPage() {
 
             <div className="space-y-1.5">
               <Label>Short Description</Label>
+              <p className="text-xs text-slate-500">
+                Short tagline for the developer hero (not the logo upload note).
+              </p>
               <Input
                 value={form.shortDescription}
                 onChange={(e) =>
                   setForm((prev) => ({ ...prev, shortDescription: e.target.value }))
                 }
-                placeholder="One-line summary"
+                placeholder="e.g. Award-winning developer in Dubai"
               />
             </div>
 
@@ -352,7 +355,7 @@ export default function AdminDevelopersPage() {
             <div className="space-y-1.5">
               <Label>Logo</Label>
               <p className="text-xs text-slate-500">
-                Shown on the public Trusted Partners page when uploaded.
+                Upload a square logo (PNG/SVG). Used on the developers directory and profile page.
               </p>
               <Input type="file" accept="image/*" onChange={(e) => setLogoFile(e.target.files?.[0] || null)} />
             </div>
