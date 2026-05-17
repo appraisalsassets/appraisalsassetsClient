@@ -1,4 +1,5 @@
 import Hero from "@/components/layout/home/Hero";
+import HomeAdvisorySection from "@/components/layout/home/HomeAdvisorySection";
 import About from "@/components/layout/home/About";
 import WhyChooseUs from "@/components/layout/home/WhyChooseUs";
 import CallToAction from "@/components/layout/home/CallToAction";
@@ -11,6 +12,7 @@ export default function Home() {
   return (
     <main className="pt-32">
       <Hero />
+      <HomeAdvisorySection />
       <About />
       <FeaturedProp />
       <Services />
