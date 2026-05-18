@@ -22,6 +22,7 @@ import {
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import api from "@/lib/api";
+import { formatAed } from "@/lib/utils";
 
 import ImageGallery from "@/components/properties/ImageGallery";
 import MortgageCalculator from "@/components/properties/MortgageCalculator";
@@ -225,8 +226,7 @@ export default function PropertyDetail() {
 
                 <div className="text-right">
                   <p className="text-3xl font-bold text-[#C1A06E]">
-                    {property.price?.currency}{" "}
-                    {property.price?.amount?.toLocaleString()}
+                    {formatAed(property.price?.amount ?? 0)}
                   </p>
                   {property.category === "for_rent" && (
                     <span className="text-gray-500">/year</span>

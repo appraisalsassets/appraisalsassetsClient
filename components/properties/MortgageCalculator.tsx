@@ -4,7 +4,8 @@ import React, { useState, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
-import { Calculator, Percent, Calendar, DollarSign } from "lucide-react";
+import { Calculator, Percent, Calendar, Wallet } from "lucide-react";
+import { formatAed } from "@/lib/utils";
 
 interface MortgageCalculatorProps {
   propertyPrice: number;
@@ -63,7 +64,7 @@ export default function MortgageCalculator({
               Property Price
             </label>
             <span className="text-lg font-bold text-primary-dark">
-              AED {propertyPrice?.toLocaleString()}
+              {formatAed(propertyPrice)}
             </span>
           </div>
         </div>
@@ -72,12 +73,12 @@ export default function MortgageCalculator({
         <div>
           <div className="flex justify-between items-center mb-3">
             <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-              <DollarSign className="w-4 h-4 text-[#C1A06E]" />
+              <Wallet className="w-4 h-4 text-[#C1A06E]" />
               Down Payment
             </label>
             <span className="text-sm font-semibold text-primary-dark">
-              {downPayment}% (AED{" "}
-              {((propertyPrice * downPayment) / 100).toLocaleString()})
+              {downPayment}% (
+              {formatAed((propertyPrice * downPayment) / 100)})
             </span>
           </div>
           <Slider
@@ -151,7 +152,7 @@ export default function MortgageCalculator({
               Estimated Monthly Payment
             </p>
             <p className="text-4xl font-bold text-[#C1A06E]">
-              AED {Math.round(calculation.monthlyPayment).toLocaleString()}
+              {formatAed(Math.round(calculation.monthlyPayment))}
             </p>
           </div>
 
@@ -159,13 +160,13 @@ export default function MortgageCalculator({
             <div className="bg-white/10 rounded-lg p-3">
               <p className="text-gray-300 mb-1">Loan Amount</p>
               <p className="font-semibold">
-                AED {Math.round(calculation.loanAmount).toLocaleString()}
+                {formatAed(Math.round(calculation.loanAmount))}
               </p>
             </div>
             <div className="bg-white/10 rounded-lg p-3">
               <p className="text-gray-300 mb-1">Total Interest</p>
               <p className="font-semibold">
-                AED {Math.round(calculation.totalInterest).toLocaleString()}
+                {formatAed(Math.round(calculation.totalInterest))}
               </p>
             </div>
           </div>
