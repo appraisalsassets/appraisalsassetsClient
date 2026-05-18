@@ -16,14 +16,13 @@ import {
   ArrowLeft,
   Check,
   Loader2,
-  Download,
   FileText,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import api from "@/lib/api";
 import { formatAed } from "@/lib/utils";
-import { getPropertyBrochureDownloadUrl } from "@/lib/propertyBrochure";
+import PropertyBrochureDownload from "@/components/properties/PropertyBrochureDownload";
 
 import ImageGallery from "@/components/properties/ImageGallery";
 import MortgageCalculator from "@/components/properties/MortgageCalculator";
@@ -172,8 +171,6 @@ export default function PropertyDetail() {
   const hasBrochure = Boolean(property.documentPdf?.url?.trim());
   const pdfFileName =
     property.documentPdf?.fileName?.trim() || "property-brochure.pdf";
-  const brochureDownloadUrl = getPropertyBrochureDownloadUrl(property._id);
-
   return (
     <div className="min-h-screen bg-gray-50 mt-36">
       {/* Back Navigation */}
@@ -294,18 +291,11 @@ export default function PropertyDetail() {
               {/* Actions */}
               <div className="flex flex-col sm:flex-row gap-3 mt-6">
                 {hasBrochure ? (
-                  <Button
-                    asChild
+                  <PropertyBrochureDownload
+                    propertyId={property._id}
+                    fileName={pdfFileName}
                     className="w-full sm:flex-1 bg-[#C1A06E] hover:bg-[#a88b5e] text-white"
-                  >
-                    <a
-                      href={brochureDownloadUrl}
-                      download={pdfFileName}
-                    >
-                      <Download className="w-4 h-4 mr-2" />
-                      Download brochure (PDF)
-                    </a>
-                  </Button>
+                  />
                 ) : null}
                 <Button variant="outline" className="w-full sm:flex-1">
                   <Share2 className="w-4 h-4 mr-2" />
