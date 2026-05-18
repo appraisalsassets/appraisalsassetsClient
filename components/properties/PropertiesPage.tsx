@@ -20,6 +20,7 @@ import PropertyCard from "../utils/PropertyCard";
 import SaveSearchDialog from "./SaveSearchDialog";
 import { Property, getPropertyImage } from "@/types/property";
 import { LOCATION_LABELS } from "@/constants/locations";
+import { toast } from "sonner";
 
 interface PropertiesPageProps {
   initialCategory?: string;
@@ -127,10 +128,21 @@ export default function PropertiesPage({
         Object.keys(requestParams).length ? requestParams : undefined,
       );
       if (response.success && response.properties) {
-        setProperties(response.properties.filter((p: Property) => p.isActive));
+        setProperties(
+          response.properties.filter((p: Property) => p.isActive !== false),
+        );
+      } else {
+        setProperties([]);
+        toast.error(response.message || "Could not load properties");
       }
     } catch (error) {
       console.error("Failed to fetch properties:", error);
+      setProperties([]);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Cannot reach the API. Start the server and check NEXT_PUBLIC_API_URL in .env.local",
+      );
     } finally {
       setIsLoading(false);
     }
