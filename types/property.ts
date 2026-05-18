@@ -24,6 +24,7 @@ export interface Property {
     isCover?: boolean;
   }>;
   documentPdf?: {
+    downloadUrl?: string;
     url?: string;
     fileName?: string;
   };

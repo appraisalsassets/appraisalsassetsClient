@@ -23,6 +23,7 @@ import { motion } from "framer-motion";
 import { toast } from "sonner";
 import api from "@/lib/api";
 import { formatAed } from "@/lib/utils";
+import { getPropertyBrochureDownloadUrl } from "@/lib/propertyBrochure";
 
 import ImageGallery from "@/components/properties/ImageGallery";
 import MortgageCalculator from "@/components/properties/MortgageCalculator";
@@ -168,9 +169,10 @@ export default function PropertyDetail() {
   const isSaleProperty =
     normalizedCategory === "for_sale" || normalizedCategory === "sale";
   const hasValidPrice = Number(property.price?.amount || 0) > 0;
-  const pdfUrl = property.documentPdf?.url?.trim() || "";
+  const hasBrochure = Boolean(property.documentPdf?.url?.trim());
   const pdfFileName =
     property.documentPdf?.fileName?.trim() || "property-brochure.pdf";
+  const brochureDownloadUrl = getPropertyBrochureDownloadUrl(property._id);
 
   return (
     <div className="min-h-screen bg-gray-50 mt-36">
@@ -291,15 +293,13 @@ export default function PropertyDetail() {
 
               {/* Actions */}
               <div className="flex flex-col sm:flex-row gap-3 mt-6">
-                {pdfUrl ? (
+                {hasBrochure ? (
                   <Button
                     asChild
                     className="w-full sm:flex-1 bg-[#C1A06E] hover:bg-[#a88b5e] text-white"
                   >
                     <a
-                      href={pdfUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      href={brochureDownloadUrl}
                       download={pdfFileName}
                     >
                       <Download className="w-4 h-4 mr-2" />
