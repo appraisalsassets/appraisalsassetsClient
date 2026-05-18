@@ -1,5 +1,5 @@
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "https://appraisalsassets-server-delta.vercel.app/api";
+  process.env.NEXT_PUBLIC_API_URL || "https://appraisalsassets-server.vercel.app/api";
 interface ApiResponse<T = any> {
   success: boolean;
   message: string;
