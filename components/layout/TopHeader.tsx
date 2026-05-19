@@ -1,15 +1,12 @@
 "use client";
 
 import {
-  Facebook,
-  Instagram,
-  Linkedin,
   Mail,
   Phone,
-  Twitter,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import api from "@/lib/api";
+import SocialLinks from "./SocialLinks";
 
 export default function TopHeader() {
   const [isVisible, setIsVisible] = useState(true);
@@ -23,12 +20,6 @@ export default function TopHeader() {
     phone1: MY_PHONE_1,
     phone2: MY_PHONE_2,
     email: MY_EMAIL,
-    socialLinks: { 
-      facebook: "https://www.facebook.com/assetsnappraisalsre/", 
-      instagram: "https://www.instagram.com/assetsnappraisalsre", 
-      linkedin: "https://x.com/appraisals_real", 
-      twitter: "https://www.linkedin.com/company/assets-appraisal-real-estate-llc/" 
-    },
   });
 
   useEffect(() => {
@@ -51,13 +42,6 @@ export default function TopHeader() {
       })
       .catch(() => {});
   }, []);
-
-  const socialItems = [
-    { href: contact.socialLinks.facebook, Icon: Facebook },
-    { href: contact.socialLinks.instagram, Icon: Instagram },
-    { href: contact.socialLinks.linkedin, Icon: Linkedin },
-    { href: contact.socialLinks.twitter, Icon: Twitter },
-  ];
 
   return (
     <header
@@ -94,17 +78,10 @@ export default function TopHeader() {
         </div>
 
         <div className="flex items-center gap-1 md:gap-3">
-          {socialItems.map(({ href, Icon }, i) => (
-            <a
-              key={i}
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-white hover:text-primary p-1 md:p-2 transition-all duration-200"
-            >
-              <Icon className="h-3.5 w-3.5 md:h-4 md:w-4" />
-            </a>
-          ))}
+          <SocialLinks
+            linkClassName="text-white hover:text-primary p-1 md:p-2 transition-all duration-200"
+            iconClassName="h-3.5 w-3.5 md:h-4 md:w-4"
+          />
         </div>
       </div>
     </header>

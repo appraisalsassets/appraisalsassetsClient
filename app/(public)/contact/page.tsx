@@ -20,15 +20,12 @@ import {
   Send,
   Loader2,
   CheckCircle2,
-  Facebook,
-  Instagram,
-  Linkedin,
-  Twitter,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import api from "@/lib/api";
 import PageHero from "@/components/layout/PageHero";
+import SocialLinks from "@/components/layout/SocialLinks";
 import {
   FALLBACK_PROPERTY_OPTIONS,
   normalizeSelectOptions,
@@ -224,30 +221,10 @@ export default function Contact() {
               <div className="pt-8 border-t border-gray-200">
                 <h4 className="font-semibold text-primary-dark mb-4">Follow Us</h4>
                 <div className="flex gap-4">
-                  <a
-                    href="https://www.facebook.com/assetsnappraisalsre/"
-                    className="w-10 h-10 bg-primary-dark rounded-full flex items-center justify-center text-white hover:bg-[#C1A06E] transition-colors"
-                  >
-                    <Facebook className="w-5 h-5" />
-                  </a>
-                  <a
-                    href="https://www.instagram.com/assetsnappraisalsre"
-                    className="w-10 h-10 bg-primary-dark rounded-full flex items-center justify-center text-white hover:bg-[#C1A06E] transition-colors"
-                  >
-                    <Instagram className="w-5 h-5" />
-                  </a>
-                  <a
-                    href="https://www.linkedin.com/in/assets-appraisals-497626402/"
-                    className="w-10 h-10 bg-primary-dark rounded-full flex items-center justify-center text-white hover:bg-[#C1A06E] transition-colors"
-                  >
-                    <Linkedin className="w-5 h-5" />
-                  </a>
-                  <a
-                    href="https://x.com/appraisals_real"
-                    className="w-10 h-10 bg-primary-dark rounded-full flex items-center justify-center text-white hover:bg-[#C1A06E] transition-colors"
-                  >
-                    <Twitter className="w-5 h-5" />
-                  </a>
+                  <SocialLinks
+                    linkClassName="w-10 h-10 bg-primary-dark rounded-full flex items-center justify-center text-white hover:bg-[#C1A06E] transition-colors"
+                    iconClassName="w-5 h-5"
+                  />
                 </div>
               </div>
             </div>

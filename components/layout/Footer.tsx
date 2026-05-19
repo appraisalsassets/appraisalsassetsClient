@@ -6,14 +6,12 @@ import {
   MapPin,
   Phone,
   Mail,
-  Facebook,
-  Instagram,
-  Linkedin,
   Send,
 } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
 import api from "@/lib/api";
+import SocialLinks from "./SocialLinks";
 
 function NewsletterBar() {
   const [email, setEmail] = useState("");
@@ -101,32 +99,10 @@ export default function Footer() {
             </p>
 
             <div className="flex flex-wrap gap-3 pt-2">
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-600 transition-all duration-300 hover:border-primary hover:text-primary"
-              >
-                <Facebook className="h-5 w-5" />
-              </a>
-
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-600 transition-all duration-300 hover:border-primary hover:text-primary"
-              >
-                <Instagram className="h-5 w-5" />
-              </a>
-
-              <a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-600 transition-all duration-300 hover:border-primary hover:text-primary"
-              >
-                <Linkedin className="h-5 w-5" />
-              </a>
+              <SocialLinks
+                linkClassName="flex h-10 w-10 items-center justify-center rounded-full border border-gray-600 transition-all duration-300 hover:border-primary hover:text-primary"
+                iconClassName="h-5 w-5"
+              />
             </div>
           </div>
 
