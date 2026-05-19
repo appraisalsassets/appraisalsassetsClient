@@ -49,20 +49,20 @@ export default function TopHeader() {
         isVisible ? "translate-y-0" : "-translate-y-full"
       } fixed top-0 left-0 right-0 z-50`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-        <div className="text-white flex items-center gap-2 md:gap-4 lg:gap-6">
-          <div className="flex items-center gap-2 text-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3">
+        <div className="min-w-0 text-white flex items-center gap-2 md:gap-4 lg:gap-6">
+          <div className="flex min-w-0 items-center gap-2 text-xs sm:text-sm">
             <Phone className="h-4 w-4 shrink-0" />
             <a
               href={`tel:${contact.phone1.replace(/\s/g, "")}`}
-              className="hover:text-primary transition-all duration-300"
+              className="whitespace-nowrap hover:text-primary transition-all duration-300"
             >
               {contact.phone1}
             </a>
-            <span className="opacity-50">|</span>
+            <span className="hidden opacity-50 sm:inline">|</span>
             <a
               href={`tel:${contact.phone2.replace(/\s/g, "")}`}
-              className="hover:text-primary transition-all duration-300"
+              className="hidden whitespace-nowrap hover:text-primary transition-all duration-300 sm:inline"
             >
               {contact.phone2}
             </a>
@@ -77,7 +77,7 @@ export default function TopHeader() {
           </a>
         </div>
 
-        <div className="flex items-center gap-1 md:gap-3">
+        <div className="hidden items-center gap-1 sm:flex md:gap-3">
           <SocialLinks
             linkClassName="text-white hover:text-primary p-1 md:p-2 transition-all duration-200"
             iconClassName="h-3.5 w-3.5 md:h-4 md:w-4"

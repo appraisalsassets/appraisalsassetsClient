@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Settings } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { NAV_LINKS } from "@/constants/constants";
 import Link from "next/link";
 import Image from "next/image";
@@ -32,10 +32,10 @@ export default function Header() {
       <header
         className={`fixed left-0 right-0 z-40 w-full transition-all duration-500 ${
           isTopHeaderVisible
-            ? "top-12 bg-white shadow-sm py-4"
+            ? "top-8 bg-white shadow-sm py-3 md:top-14 md:py-4"
             : isScrolled
               ? "top-0 bg-white/40 backdrop-blur-xl border-b border-white/20 py-3 shadow-sm"
-              : "top-0 bg-white shadow-sm py-4"
+              : "top-0 bg-white shadow-sm py-3 md:py-4"
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -43,7 +43,13 @@ export default function Header() {
             {/* Logo */}
             <div className="shrink-0">
               <Link href={"/"}>
-                <Image src={"/logo.png"} alt="logo" width={80} height={80} />
+                <Image
+                  src={"/logo.png"}
+                  alt="logo"
+                  width={80}
+                  height={80}
+                  className="h-14 w-14 object-contain md:h-20 md:w-20"
+                />
               </Link>
             </div>
 

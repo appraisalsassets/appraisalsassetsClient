@@ -21,32 +21,31 @@ export default function DeveloperAboutSection({
   const body = getDeveloperAboutText(about, shortDescription);
   const needsToggle = body.length > PREVIEW_LENGTH;
   const displayText =
-    needsToggle && !expanded ? `${body.slice(0, PREVIEW_LENGTH).trim()}…` : body;
+    needsToggle && !expanded ? `${body.slice(0, PREVIEW_LENGTH).trim()}...` : body;
 
   return (
-    <section className="bg-white py-12 sm:py-16">
-      <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
-        <h2 className="text-3xl font-bold text-primary-dark sm:text-4xl">
-          About {name}
-        </h2>
+    <section className="bg-white py-8 sm:py-10">
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         {body ? (
           <>
-            <p className="mt-6 text-left text-base leading-relaxed text-slate-600 sm:text-center sm:text-lg">
+            <p className="mx-auto max-w-3xl text-center text-base leading-relaxed text-slate-600 sm:text-lg">
               {displayText}
             </p>
             {needsToggle ? (
-              <Button
-                type="button"
-                onClick={() => setExpanded((v) => !v)}
-                className="mt-8 rounded-full bg-[#C1A06E] px-8 text-white hover:bg-[#a88b5e]"
-              >
-                {expanded ? "Show Less" : "Show More"}
-              </Button>
+              <div className="text-center">
+                <Button
+                  type="button"
+                  onClick={() => setExpanded((v) => !v)}
+                  className="mt-8 rounded-full bg-[#C1A06E] px-8 text-white hover:bg-[#a88b5e]"
+                >
+                  {expanded ? "Show Less" : "Show More"}
+                </Button>
+              </div>
             ) : null}
           </>
         ) : (
-          <p className="mt-6 text-slate-500 italic">
-            Add a company profile in Admin → Developers (About field) to display
+          <p className="mt-6 text-center text-slate-500 italic">
+            Add a company profile in Admin - Developers (About field) to display
             it here.
           </p>
         )}

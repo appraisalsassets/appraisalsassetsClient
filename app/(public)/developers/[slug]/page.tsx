@@ -14,11 +14,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import DeveloperProfileHero from "@/components/developers/DeveloperProfileHero";
 import DeveloperAboutSection from "@/components/developers/DeveloperAboutSection";
 import DeveloperProjectCard from "@/components/developers/DeveloperProjectCard";
 import OtherDevelopersSection from "@/components/developers/OtherDevelopersSection";
-import { getDeveloperSummaryText } from "@/lib/developerContent";
 
 type Developer = {
   _id: string;
@@ -136,23 +134,27 @@ export default function DeveloperProfilePage() {
 
   const propertiesUrl = `/developers/${encodeURIComponent(developer.slug)}/properties`;
   const displayCount = properties.length || developer.projectsCount || 0;
-  const summary = getDeveloperSummaryText(
-    developer.shortDescription,
-    developer.focus,
-  );
 
   return (
     <div className="min-h-screen bg-white">
-      <DeveloperProfileHero
-        name={developer.name}
-        summary={summary}
-        logo={developer.logo}
-        heroImage={developer.heroImage}
-        breadcrumbs={[
-          { label: "Off Plan Developers", href: "/developers" },
-          { label: developer.name },
-        ]}
-      />
+      <section className="border-b border-slate-100 bg-white pt-28 sm:pt-32">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-center gap-2 px-4 py-5 text-center sm:px-6 sm:py-7 lg:px-8">
+          <div className="flex h-18 w-36 items-center justify-center sm:h-24 sm:w-44">
+            {developer.logo ? (
+              <img
+                src={developer.logo}
+                alt={`${developer.name} logo`}
+                className="max-h-full w-auto max-w-full object-contain"
+              />
+            ) : (
+              <Building2 className="h-12 w-12 text-slate-400" />
+            )}
+          </div>
+          <h1 className="text-xl font-semibold tracking-tight text-primary-dark sm:text-3xl">
+            {developer.name}
+          </h1>
+        </div>
+      </section>
 
       <DeveloperAboutSection
         name={developer.name}
@@ -160,10 +162,10 @@ export default function DeveloperProfilePage() {
         shortDescription={developer.shortDescription}
       />
 
-      <section className="bg-slate-50 py-12 sm:py-16">
+      <section id="developer-projects" className="bg-slate-50 py-12 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-center text-3xl font-bold text-primary-dark sm:text-4xl">
-            {developer.name} Projects
+          <h2 className="text-center text-2xl font-semibold text-primary-dark sm:text-3xl">
+            Projects
           </h2>
 
           <div className="mt-8 flex flex-col gap-4 border-b border-slate-200 pb-6 sm:flex-row sm:items-center sm:justify-between">

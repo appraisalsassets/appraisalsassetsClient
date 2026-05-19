@@ -55,7 +55,6 @@ export default function AdminDevelopersPage() {
   const [saving, setSaving] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [logoFile, setLogoFile] = useState<File | null>(null);
-  const [heroFile, setHeroFile] = useState<File | null>(null);
   const [form, setForm] = useState(initialForm);
 
   const fetchDevelopers = async () => {
@@ -81,7 +80,6 @@ export default function AdminDevelopersPage() {
     setForm(initialForm);
     setEditingId(null);
     setLogoFile(null);
-    setHeroFile(null);
   };
 
   const startEdit = (developer: Developer) => {
@@ -96,7 +94,6 @@ export default function AdminDevelopersPage() {
       isActive: developer.isActive !== false,
     });
     setLogoFile(null);
-    setHeroFile(null);
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -117,7 +114,6 @@ export default function AdminDevelopersPage() {
       data.append("displayOrder", form.displayOrder || "0");
       data.append("isActive", String(form.isActive));
       if (logoFile) data.append("logo", logoFile);
-      if (heroFile) data.append("heroImage", heroFile);
 
       const response = editingId
         ? await api.updateDeveloper(editingId, data)
@@ -358,14 +354,6 @@ export default function AdminDevelopersPage() {
                 Upload a square logo (PNG/SVG). Used on the developers directory and profile page.
               </p>
               <Input type="file" accept="image/*" onChange={(e) => setLogoFile(e.target.files?.[0] || null)} />
-            </div>
-            <div className="space-y-1.5">
-              <Label>Hero Image</Label>
-              <Input
-                type="file"
-                accept="image/*"
-                onChange={(e) => setHeroFile(e.target.files?.[0] || null)}
-              />
             </div>
 
             <Button

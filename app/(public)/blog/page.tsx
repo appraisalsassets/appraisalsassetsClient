@@ -86,23 +86,24 @@ export default function BlogPage() {
       <PageHero
         title="Blog & Insights"
         description="Stay informed with the latest Dubai real estate news, market trends, and expert investment insights."
+        className="h-[360px] sm:h-[400px] lg:h-[420px]"
         contentClassName="max-w-6xl"
       />
 
       {/* Filters */}
-      <section className="max-w-6xl mx-auto px-4 -mt-8">
-        <div className="bg-white rounded-xl shadow-lg border border-slate-100 p-4 flex flex-col sm:flex-row items-center gap-4">
+      <section className="bg-white px-4 py-6 sm:py-8">
+        <div className="mx-auto flex max-w-6xl flex-col gap-3 border-b border-slate-100 bg-white pb-4 sm:flex-row sm:items-center sm:gap-4">
           <div className="relative flex-1 w-full">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <Input
               placeholder="Search articles..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-10 border-slate-200"
+              className="h-11 pl-10 border-slate-200"
             />
           </div>
           <Select value={category} onValueChange={setCategory}>
-            <SelectTrigger className="w-full sm:w-[200px] border-slate-200">
+            <SelectTrigger className="h-11 w-full border-slate-200 sm:w-[220px]">
               <SelectValue placeholder="All Categories" />
             </SelectTrigger>
             <SelectContent>
@@ -123,7 +124,7 @@ export default function BlogPage() {
       </section>
 
       {/* Content */}
-      <section className="max-w-6xl mx-auto px-4 py-12">
+      <section className="max-w-6xl mx-auto px-4 pb-12 pt-4 sm:pb-16 sm:pt-6">
         {isLoading ? (
           <div className="text-center py-20">
             <p className="text-slate-500">Loading articles...</p>
