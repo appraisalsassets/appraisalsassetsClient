@@ -25,7 +25,7 @@ export default function PageHero({
   return (
     <div
       className={cn(
-        "bg-secondary relative flex h-[48vh] items-center justify-center sm:h-[52vh] lg:h-[60vh]",
+        "bg-secondary relative flex h-[48vh] items-center justify-center sm:h-[52vh] lg:h-[60vh] py-10",
         className,
       )}
     >
