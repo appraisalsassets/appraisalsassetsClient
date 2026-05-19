@@ -131,7 +131,7 @@ export default function PropertiesPage({
       if (response.success && Array.isArray(response.properties)) {
         setProperties(
           response.properties
-            .map((p: Property) => normalizeProperty(p as Record<string, unknown>))
+            .map((p: Property) => normalizeProperty(p as unknown as Record<string, unknown>))
             .filter((p) => p.isActive !== false),
         );
       } else {
