@@ -64,19 +64,9 @@ export default function DevelopersPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <PageHero
-        title="Discover Leading Property Developers Across the UAE"
-        description="Browse trusted off-plan developers, explore their portfolios, and connect with our team for expert guidance on Dubai investments."
-        backgroundImage="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=2000"
-        backgroundAlt="Dubai skyline"
-        badge={
-          <span className="mb-4 inline-block rounded-full border border-[#C1A06E]/40 bg-[#C1A06E]/20 px-4 py-2 text-sm font-medium text-[#C1A06E]">
-            Off-Plan Developers
-          </span>
-        }
-      />
+     
 
-      <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+      <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14 md:mt-24 lg:mt-32 sm:mt-16 mt-32">
         <DeveloperBreadcrumbs
           items={[{ label: "Off Plan Developers" }]}
           className="mb-8"

@@ -18,9 +18,9 @@ import PropertyFilters from "./PropertyFilters";
 import PageHero from "@/components/layout/PageHero";
 import PropertyCard from "../utils/PropertyCard";
 import SaveSearchDialog from "./SaveSearchDialog";
-import { Property, getPropertyImage } from "@/types/property";
-import { LOCATION_LABELS } from "@/constants/locations";
+import { Property, getPropertyImage, normalizeProperty } from "@/types/property";
 import { toast } from "sonner";
+import { LOCATION_LABELS } from "@/constants/locations";
 
 interface PropertiesPageProps {
   initialCategory?: string;
@@ -120,16 +120,19 @@ export default function PropertiesPage({
         isCategoryLocked && initialCategory
           ? initialCategory
           : searchParams.get("category") || "";
-      const requestParams: Record<string, string> = {};
+      const requestParams: Record<string, string> = {
+        activeOnly: "true",
+        limit: "500",
+      };
       if (categoryParam) requestParams.category = categoryParam;
       if (developerSlugFromUrl)
         requestParams.developerSlug = developerSlugFromUrl;
-      const response = await api.getProperties(
-        Object.keys(requestParams).length ? requestParams : undefined,
-      );
-      if (response.success && response.properties) {
+      const response = await api.getProperties(requestParams);
+      if (response.success && Array.isArray(response.properties)) {
         setProperties(
-          response.properties.filter((p: Property) => p.isActive !== false),
+          response.properties
+            .map((p: Property) => normalizeProperty(p as Record<string, unknown>))
+            .filter((p) => p.isActive !== false),
         );
       } else {
         setProperties([]);
@@ -141,7 +144,7 @@ export default function PropertiesPage({
       toast.error(
         error instanceof Error
           ? error.message
-          : "Cannot reach the API. Start the server and check NEXT_PUBLIC_API_URL in .env.local",
+          : "Cannot reach the API. Start the server (npm run dev in /server) and check NEXT_PUBLIC_API_URL in .env.local",
       );
     } finally {
       setIsLoading(false);

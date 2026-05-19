@@ -40,8 +40,9 @@ export default function FeaturedProp() {
   const fetchFeaturedProperties = async () => {
     try {
       const response = await api.getProperties({
-        limit: 3,
-        isFeatured: true,
+        limit: "3",
+        isFeatured: "true",
+        activeOnly: "true",
       });
 
       if (response.success && response.properties) {

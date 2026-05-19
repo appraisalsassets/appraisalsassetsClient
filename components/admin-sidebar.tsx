@@ -15,6 +15,7 @@ import {
   Users,
   FolderOpen,
   Building,
+  Handshake,
   Settings,
   LogOut,
   ArrowLeft,
@@ -78,6 +79,12 @@ const menuItems: {
     name: 'Developers',
     href: '/admin/developers',
     icon: Building,
+    permission: 'developers',
+  },
+  {
+    name: 'Trusted Partners',
+    href: '/admin/trusted-partners',
+    icon: Handshake,
     permission: 'developers',
   },
   {

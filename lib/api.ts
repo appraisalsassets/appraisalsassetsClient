@@ -279,7 +279,43 @@ class ApiClient {
   }
 
   async getTrustedPartners() {
-    return this.request("/developers/trusted-partners", { method: "GET" });
+    return this.request("/trusted-partners", { method: "GET" });
+  }
+
+  async getTrustedPartnersAdmin() {
+    return this.request("/trusted-partners/admin/all", { method: "GET" });
+  }
+
+  async createTrustedPartner(formData: FormData) {
+    const headers: HeadersInit = {};
+    if (this.accessToken) {
+      headers["Authorization"] = `Bearer ${this.accessToken}`;
+    }
+    const response = await fetch(`${this.baseUrl}/trusted-partners`, {
+      method: "POST",
+      headers,
+      body: formData,
+      credentials: "include",
+    });
+    return this.parseFetchResponse(response);
+  }
+
+  async updateTrustedPartner(id: string, formData: FormData) {
+    const headers: HeadersInit = {};
+    if (this.accessToken) {
+      headers["Authorization"] = `Bearer ${this.accessToken}`;
+    }
+    const response = await fetch(`${this.baseUrl}/trusted-partners/${id}`, {
+      method: "PUT",
+      headers,
+      body: formData,
+      credentials: "include",
+    });
+    return this.parseFetchResponse(response);
+  }
+
+  async deleteTrustedPartner(id: string) {
+    return this.request(`/trusted-partners/${id}`, { method: "DELETE" });
   }
 
   async getDevelopersAdmin() {

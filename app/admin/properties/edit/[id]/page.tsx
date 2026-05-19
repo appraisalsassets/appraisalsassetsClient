@@ -436,24 +436,12 @@ export default function EditPropertyPage() {
 
               <div className="space-y-2">
                 <Label className="font-semibold text-slate-900">Status</Label>
-                <Select 
-                  value={formData.status} 
-                  onValueChange={(val) => handleSelectChange('status', val)}
-                >
-                  <SelectTrigger className="w-full bg-white border-slate-200">
-                    <SelectValue placeholder="Select Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {withCurrentSelectOption(
-                      formOptions.statuses,
-                      formData.status,
-                    ).map((status) => (
-                      <SelectItem key={status.value} value={status.value}>
-                        {status.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Input
+                  name="status"
+                  placeholder="e.g. Available, Sold, Under Offer"
+                  value={formData.status}
+                  onChange={handleChange}
+                />
               </div>
             </div>
           </div>
