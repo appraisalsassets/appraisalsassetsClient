@@ -5,34 +5,17 @@ import Filter from "./Filter";
 import HomeHeroInquiryForm from "./HomeHeroInquiryForm";
 import { ArrowRight, Award, Building2, HandCoins, Smile } from "lucide-react";
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import api from "@/lib/api";
 
 const STAT_ICONS = [Award, Building2, HandCoins, Smile];
 
+const HOME_HERO_CONTENT = {
+  badgeText: "RERA Certified | Trusted Since 2010",
+  headline: "Best Real Estate Agency in Dubai",
+  description:
+    "Trusted Real Estate Company & Property Experts. Assets & Appraisal is a leading real estate agency in Dubai and trusted real estate company, recognized among the top real estate companies in Dubai for delivering complete real estate services in Dubai across residential and commercial sectors.",
+};
+
 export default function Hero() {
-  const [content, setContent] = useState({
-    badgeText: "Trusted property intelligence for Dubai investors",
-    headline: "Modern property advisory powered by data, clarity, and speed.",
-    description:
-      "Assets & Appraisals brings together real estate market insights, valuation intelligence, and responsive advisory for teams that need to move faster and make smarter decisions.",
-  });
-
-  useEffect(() => {
-    api
-      .getSiteContent()
-      .then((res) => {
-        if (res.success && res.data?.hero) {
-          setContent((prev) => ({
-            badgeText: res.data.hero.badgeText || prev.badgeText,
-            headline: res.data.hero.headline || prev.headline,
-            description: res.data.hero.description || prev.description,
-          }));
-        }
-      })
-      .catch(() => {});
-  }, []);
-
   const scrollToInquiry = () => {
     document
       .getElementById("hero-inquiry-form")
@@ -54,15 +37,15 @@ export default function Hero() {
         <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-start lg:gap-12">
           <div className="space-y-6 sm:space-y-8">
             <span className="inline-flex max-w-full items-center rounded-full border border-primary/40 bg-primary/10 px-3 py-2 text-xs font-medium text-primary sm:px-4 sm:text-sm">
-              {content.badgeText}
+              {HOME_HERO_CONTENT.badgeText}
             </span>
 
             <div className="space-y-4 sm:space-y-6">
               <h1 className="text-3xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
-                {content.headline}
+                {HOME_HERO_CONTENT.headline}
               </h1>
               <p className="max-w-2xl text-sm leading-7 text-slate-300 sm:text-lg sm:leading-8">
-                {content.description}
+                {HOME_HERO_CONTENT.description}
               </p>
             </div>
 
