@@ -137,20 +137,20 @@ export default function DeveloperProfilePage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <section className="border-b border-slate-100 bg-white pt-28 sm:pt-32">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-center gap-2 px-4 py-5 text-center sm:px-6 sm:py-7 lg:px-8">
-          <div className="flex h-18 w-36 items-center justify-center sm:h-24 sm:w-44">
+      <section className="border-b border-slate-100 bg-white pt-28 sm:pt-38">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-center gap-3 px-4 py-5 text-center sm:px-6 sm:py-6 lg:px-8">
+          <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-md bg-white sm:h-24 sm:w-24">
             {developer.logo ? (
               <img
                 src={developer.logo}
                 alt={`${developer.name} logo`}
-                className="max-h-full w-auto max-w-full object-contain"
+                className="h-full w-full object-contain"
               />
             ) : (
-              <Building2 className="h-12 w-12 text-slate-400" />
+              <Building2 className="h-10 w-10 text-slate-400" />
             )}
           </div>
-          <h1 className="text-xl font-semibold tracking-tight text-primary-dark sm:text-3xl">
+          <h1 className="text-2xl font-semibold tracking-tight text-primary-dark sm:text-3xl">
             {developer.name}
           </h1>
         </div>

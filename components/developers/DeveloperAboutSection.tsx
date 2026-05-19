@@ -25,10 +25,10 @@ export default function DeveloperAboutSection({
 
   return (
     <section className="bg-white py-8 sm:py-10">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-4xl overflow-hidden px-4 sm:px-6 lg:px-8">
         {body ? (
           <>
-            <p className="mx-auto max-w-3xl text-center text-base leading-relaxed text-slate-600 sm:text-lg">
+            <p className="mx-auto max-w-3xl text-left text-base leading-relaxed text-slate-600 sm:text-center sm:text-lg">
               {displayText}
             </p>
             {needsToggle ? (
