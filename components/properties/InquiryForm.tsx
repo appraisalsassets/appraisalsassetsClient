@@ -243,10 +243,10 @@ export default function InquiryForm({ property }: InquiryFormProps) {
           <p className="text-sm text-gray-500 text-center mb-4">
             Or call us directly
           </p>
-          <a href="tel:+97145551234">
+          <a href="tel:+97142885213">
             <Button variant="outline" className="w-full h-12 border-primary-dark">
               <Phone className="w-4 h-4 mr-2" />
-              +971 4 555 1234
+              +971-4-288-5213
             </Button>
           </a>
         </div>
