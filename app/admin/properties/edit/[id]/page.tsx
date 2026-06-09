@@ -29,6 +29,11 @@ import {
   withCurrentSelectOption,
 } from "@/constants/form-options";
 import { isOffPlanCategory } from "@/lib/propertyCategory";
+import {
+  getMaxPropertyUploadBytes,
+  getPropertyUploadSize,
+  getPropertyUploadTooLargeMessage,
+} from "@/lib/uploadLimits";
 
 export default function EditPropertyPage() {
   const router = useRouter();
@@ -278,6 +283,13 @@ export default function EditPropertyPage() {
     try {
       if (isOffPlanCategory(formData.category) && !formData.developerSlug) {
         toast.error("Please select a developer for off-plan properties");
+        setLoading(false);
+        return;
+      }
+
+      const uploadSize = getPropertyUploadSize(images, pdfFile);
+      if (uploadSize > getMaxPropertyUploadBytes()) {
+        toast.error(getPropertyUploadTooLargeMessage(uploadSize));
         setLoading(false);
         return;
       }

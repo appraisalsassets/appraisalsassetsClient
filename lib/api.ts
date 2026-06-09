@@ -216,52 +216,108 @@ class ApiClient {
     });
   }
 
-  private async parseFetchResponse(response: Response): Promise<ApiResponse> {
-    let data: ApiResponse;
-    try {
-      data = await response.json();
-    } catch {
-      if (!response.ok) {
-        throw new Error(response.statusText || "Invalid server response");
+  private getHttpErrorMessage(response: Response, data?: ApiResponse | null) {
+    if (data?.message) return data.message;
+
+    switch (response.status) {
+      case 401:
+        return "Your session expired. Please sign in again.";
+      case 413:
+        return "Upload too large. Use smaller images/PDF or add photos via Image URLs.";
+      case 502:
+      case 504:
+        return "Server timed out while uploading. Try fewer or smaller files.";
+      case 503:
+        return "Server is temporarily unavailable. Try again shortly.";
+      default:
+        return response.statusText || `Request failed (${response.status})`;
+    }
+  }
+
+  private getNetworkErrorMessage(error: unknown, action = "reach the server") {
+    const isLocal = /localhost|127\.0\.0\.1/i.test(this.baseUrl);
+
+    if (error instanceof TypeError) {
+      if (isLocal) {
+        return `Could not ${action}. Is the API server running? (expected ${this.baseUrl})`;
       }
+      return `Could not ${action}. Check your internet connection, or try smaller image/PDF uploads.`;
+    }
+
+    if (error instanceof Error && error.message && error.message !== "Failed to fetch") {
+      return error.message;
+    }
+
+    return `Could not ${action}. Please try again.`;
+  }
+
+  private async parseFetchResponse(response: Response): Promise<ApiResponse> {
+    const contentType = response.headers.get("content-type") || "";
+    let data: ApiResponse | null = null;
+
+    if (contentType.includes("application/json")) {
+      try {
+        data = await response.json();
+      } catch {
+        data = null;
+      }
+    } else if (!response.ok) {
+      try {
+        const text = await response.text();
+        if (text) data = { success: false, message: text.slice(0, 200) };
+      } catch {
+        data = null;
+      }
+    }
+
+    if (!response.ok) {
+      throw new Error(this.getHttpErrorMessage(response, data));
+    }
+
+    if (!data) {
       throw new Error("Invalid server response");
     }
-    if (!response.ok) {
-      throw new Error(data.message || response.statusText || "Request failed");
-    }
+
     return data;
   }
 
-  async createProperty(formData: FormData) {
+  private async submitFormData(
+    endpoint: string,
+    method: "POST" | "PUT" | "PATCH",
+    formData: FormData,
+    action = "complete the upload",
+  ): Promise<ApiResponse> {
     const headers: HeadersInit = {};
     if (this.accessToken) {
       headers["Authorization"] = `Bearer ${this.accessToken}`;
     }
 
-    const response = await fetch(`${this.baseUrl}/properties`, {
-      method: "POST",
-      headers,
-      body: formData,
-      credentials: "include",
-    });
+    let response: Response;
+    try {
+      response = await fetch(`${this.baseUrl}${endpoint}`, {
+        method,
+        headers,
+        body: formData,
+        credentials: "include",
+      });
+    } catch (error) {
+      throw new Error(this.getNetworkErrorMessage(error, action));
+    }
 
     return this.parseFetchResponse(response);
   }
 
+  async createProperty(formData: FormData) {
+    return this.submitFormData("/properties", "POST", formData, "create the property");
+  }
+
   async updateProperty(id: string, formData: FormData) {
-    const headers: HeadersInit = {};
-    if (this.accessToken) {
-      headers["Authorization"] = `Bearer ${this.accessToken}`;
-    }
-
-    const response = await fetch(`${this.baseUrl}/properties/${id}`, {
-      method: "PUT",
-      headers,
-      body: formData,
-      credentials: "include",
-    });
-
-    return this.parseFetchResponse(response);
+    return this.submitFormData(
+      `/properties/${id}`,
+      "PUT",
+      formData,
+      "update the property",
+    );
   }
 
   async deleteProperty(id: string) {
@@ -287,31 +343,11 @@ class ApiClient {
   }
 
   async createTrustedPartner(formData: FormData) {
-    const headers: HeadersInit = {};
-    if (this.accessToken) {
-      headers["Authorization"] = `Bearer ${this.accessToken}`;
-    }
-    const response = await fetch(`${this.baseUrl}/trusted-partners`, {
-      method: "POST",
-      headers,
-      body: formData,
-      credentials: "include",
-    });
-    return this.parseFetchResponse(response);
+    return this.submitFormData("/trusted-partners", "POST", formData);
   }
 
   async updateTrustedPartner(id: string, formData: FormData) {
-    const headers: HeadersInit = {};
-    if (this.accessToken) {
-      headers["Authorization"] = `Bearer ${this.accessToken}`;
-    }
-    const response = await fetch(`${this.baseUrl}/trusted-partners/${id}`, {
-      method: "PUT",
-      headers,
-      body: formData,
-      credentials: "include",
-    });
-    return this.parseFetchResponse(response);
+    return this.submitFormData(`/trusted-partners/${id}`, "PUT", formData);
   }
 
   async deleteTrustedPartner(id: string) {
@@ -327,35 +363,11 @@ class ApiClient {
   }
 
   async createDeveloper(formData: FormData) {
-    const headers: HeadersInit = {};
-    if (this.accessToken) {
-      headers["Authorization"] = `Bearer ${this.accessToken}`;
-    }
-
-    const response = await fetch(`${this.baseUrl}/developers`, {
-      method: "POST",
-      headers,
-      body: formData,
-      credentials: "include",
-    });
-
-    return this.parseFetchResponse(response);
+    return this.submitFormData("/developers", "POST", formData);
   }
 
   async updateDeveloper(id: string, formData: FormData) {
-    const headers: HeadersInit = {};
-    if (this.accessToken) {
-      headers["Authorization"] = `Bearer ${this.accessToken}`;
-    }
-
-    const response = await fetch(`${this.baseUrl}/developers/${id}`, {
-      method: "PUT",
-      headers,
-      body: formData,
-      credentials: "include",
-    });
-
-    return this.parseFetchResponse(response);
+    return this.submitFormData(`/developers/${id}`, "PUT", formData);
   }
 
   async deleteDeveloper(id: string) {
@@ -376,31 +388,11 @@ class ApiClient {
   }
 
   async createService(formData: FormData) {
-    const headers: HeadersInit = {};
-    if (this.accessToken) {
-      headers["Authorization"] = `Bearer ${this.accessToken}`;
-    }
-    const response = await fetch(`${this.baseUrl}/services`, {
-      method: "POST",
-      headers,
-      body: formData,
-      credentials: "include",
-    });
-    return this.parseFetchResponse(response);
+    return this.submitFormData("/services", "POST", formData);
   }
 
   async updateService(id: string, formData: FormData) {
-    const headers: HeadersInit = {};
-    if (this.accessToken) {
-      headers["Authorization"] = `Bearer ${this.accessToken}`;
-    }
-    const response = await fetch(`${this.baseUrl}/services/${id}`, {
-      method: "PUT",
-      headers,
-      body: formData,
-      credentials: "include",
-    });
-    return this.parseFetchResponse(response);
+    return this.submitFormData(`/services/${id}`, "PUT", formData);
   }
 
   async deleteService(id: string) {

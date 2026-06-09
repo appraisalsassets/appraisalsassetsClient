@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
-import { Edit, Loader2, Plus, Trash2 } from "lucide-react";
+import { Edit, ExternalLink, Loader2, Plus, Trash2 } from "lucide-react";
 import api from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import {
@@ -126,6 +126,16 @@ export default function AdminServicesPage() {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex justify-end gap-2">
+                      <Button asChild variant="outline" size="sm">
+                        <Link
+                          href={`/services/${service.slug}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <ExternalLink className="mr-1 h-4 w-4" />
+                          View
+                        </Link>
+                      </Button>
                       <Button asChild variant="outline" size="sm">
                         <Link href={`/admin/services/edit/${service._id}`}>
                           <Edit className="mr-1 h-4 w-4" />

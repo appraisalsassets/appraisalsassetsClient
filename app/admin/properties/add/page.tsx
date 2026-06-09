@@ -22,6 +22,11 @@ import {
   SelectOption,
 } from "@/constants/form-options";
 import { isOffPlanCategory } from "@/lib/propertyCategory";
+import {
+  getMaxPropertyUploadBytes,
+  getPropertyUploadSize,
+  getPropertyUploadTooLargeMessage,
+} from "@/lib/uploadLimits";
 
 export default function AddPropertyPage() {
   const router = useRouter();
@@ -222,6 +227,13 @@ export default function AddPropertyPage() {
 
       if (images.length === 0 && imageUrls.length === 0) {
         toast.error("Please upload at least one image or add an image URL");
+        setLoading(false);
+        return;
+      }
+
+      const uploadSize = getPropertyUploadSize(images, pdfFile);
+      if (uploadSize > getMaxPropertyUploadBytes()) {
+        toast.error(getPropertyUploadTooLargeMessage(uploadSize));
         setLoading(false);
         return;
       }
