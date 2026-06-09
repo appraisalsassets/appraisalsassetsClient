@@ -362,6 +362,51 @@ class ApiClient {
     return this.request(`/developers/${id}`, { method: "DELETE" });
   }
 
+  // Services endpoints
+  async getServices() {
+    return this.request("/services", { method: "GET" });
+  }
+
+  async getServicesAdmin() {
+    return this.request("/services/admin/all", { method: "GET" });
+  }
+
+  async getServiceBySlug(slug: string) {
+    return this.request(`/services/${slug}`, { method: "GET" });
+  }
+
+  async createService(formData: FormData) {
+    const headers: HeadersInit = {};
+    if (this.accessToken) {
+      headers["Authorization"] = `Bearer ${this.accessToken}`;
+    }
+    const response = await fetch(`${this.baseUrl}/services`, {
+      method: "POST",
+      headers,
+      body: formData,
+      credentials: "include",
+    });
+    return this.parseFetchResponse(response);
+  }
+
+  async updateService(id: string, formData: FormData) {
+    const headers: HeadersInit = {};
+    if (this.accessToken) {
+      headers["Authorization"] = `Bearer ${this.accessToken}`;
+    }
+    const response = await fetch(`${this.baseUrl}/services/${id}`, {
+      method: "PUT",
+      headers,
+      body: formData,
+      credentials: "include",
+    });
+    return this.parseFetchResponse(response);
+  }
+
+  async deleteService(id: string) {
+    return this.request(`/services/${id}`, { method: "DELETE" });
+  }
+
   // Developer Projects endpoints
   async getDeveloperProjects(params?: Record<string, any>) {
     const queryString = params

@@ -16,6 +16,7 @@ import {
   FolderOpen,
   Building,
   Handshake,
+  Briefcase,
   Settings,
   LogOut,
   ArrowLeft,
@@ -86,6 +87,12 @@ const menuItems: {
     href: '/admin/trusted-partners',
     icon: Handshake,
     permission: 'developers',
+  },
+  {
+    name: 'Services',
+    href: '/admin/services',
+    icon: Briefcase,
+    permission: 'content',
   },
   {
     name: 'Content',

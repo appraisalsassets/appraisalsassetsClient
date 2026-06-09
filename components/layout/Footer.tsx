@@ -115,6 +115,7 @@ export default function Footer() {
             <ul className="space-y-3 text-sm">
               {[
                 { label: "Properties", href: "/properties" },
+                { label: "Services", href: "/services" },
                 { label: "About Us", href: "/about" },
                 { label: "Contact", href: "/contact" },
                 { label: "Off-Plan Developers", href: "/developers" },
