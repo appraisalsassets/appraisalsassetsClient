@@ -1,16 +1,9 @@
 // Nav-Links
-export type NavLink = {
-  name: string;
-  href: string;
-  hasDropdown?: boolean;
-};
-
-export const NAV_LINKS: NavLink[] = [
+export const NAV_LINKS = [
   { name: "Home", href: "/" },
   { name: "Properties", href: "/properties" },
   { name: "Sale", href: "/sale" },
   { name: "Rent", href: "/rent" },
-  { name: "Services", href: "/services", hasDropdown: true },
   { name: "Off-Plan Developers", href: "/developers" },
   { name: "Trusted Partners", href: "/trusted-partners" },
   { name: "About Us", href: "/about" },
