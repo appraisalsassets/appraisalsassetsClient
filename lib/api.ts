@@ -383,6 +383,10 @@ class ApiClient {
     return this.request("/services/admin/all", { method: "GET" });
   }
 
+  async getServiceAdmin(id: string) {
+    return this.request(`/services/admin/${id}`, { method: "GET" });
+  }
+
   async getServiceBySlug(slug: string) {
     return this.request(`/services/${slug}`, { method: "GET" });
   }

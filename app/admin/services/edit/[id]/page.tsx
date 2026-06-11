@@ -14,6 +14,12 @@ import ServiceAdminForm, {
 import { buildServiceFormData } from "@/lib/serviceForm";
 import type { Service } from "@/types/service";
 
+const emptyItem = { title: "", description: "" };
+const emptyStep = { step: "01", title: "", description: "" };
+const emptyCoverage = { region: "", locations: "" };
+const emptyPricing = { label: "", validity: "", notes: "" };
+const emptyFaq = { question: "", answer: "" };
+
 export default function EditServicePage() {
   const params = useParams();
   const router = useRouter();
@@ -24,76 +30,52 @@ export default function EditServicePage() {
   const [service, setService] = useState<Service | null>(null);
   const [form, setForm] = useState(initialServiceForm);
   const [heroFile, setHeroFile] = useState<File | null>(null);
-  const [whyChooseItems, setWhyChooseItems] = useState([
-    { title: "", description: "" },
-  ]);
-  const [offerings, setOfferings] = useState([{ title: "", description: "" }]);
-  const [steps, setSteps] = useState([
-    { step: "01", title: "", description: "" },
-  ]);
-  const [coverageAreas, setCoverageAreas] = useState([
-    { region: "", locations: "" },
-  ]);
-  const [pricingRows, setPricingRows] = useState([
-    { label: "", validity: "", notes: "" },
-  ]);
-  const [faqs, setFaqs] = useState([{ question: "", answer: "" }]);
+  const [whyChooseItems, setWhyChooseItems] = useState([emptyItem]);
+  const [offerings, setOfferings] = useState([emptyItem]);
+  const [steps, setSteps] = useState([emptyStep]);
+  const [coverageAreas, setCoverageAreas] = useState([emptyCoverage]);
+  const [pricingRows, setPricingRows] = useState([emptyPricing]);
+  const [faqs, setFaqs] = useState([emptyFaq]);
 
   useEffect(() => {
+    if (!id) return;
+
     const fetchService = async () => {
       try {
         setLoading(true);
-        const response = await api.getServicesAdmin();
-        if (!response.success) {
-          toast.error("Failed to load service");
-          return;
-        }
-        const found = (response.services as Service[]).find(
-          (item) => item._id === id,
-        );
-        if (!found) {
-          toast.error("Service not found");
+        const response = await api.getServiceAdmin(id);
+        if (!response.success || !response.service) {
+          toast.error(response.message || "Service not found");
           router.push("/admin/services");
           return;
         }
+
+        const found = response.service as Service;
         setService(found);
         setForm(serviceToFormState(found));
         setWhyChooseItems(
-          found.whyChooseItems?.length
-            ? found.whyChooseItems
-            : [{ title: "", description: "" }],
+          found.whyChooseItems?.length ? found.whyChooseItems : [emptyItem],
         );
-        setOfferings(
-          found.offerings?.length
-            ? found.offerings
-            : [{ title: "", description: "" }],
-        );
-        setSteps(
-          found.steps?.length
-            ? found.steps
-            : [{ step: "01", title: "", description: "" }],
-        );
+        setOfferings(found.offerings?.length ? found.offerings : [emptyItem]);
+        setSteps(found.steps?.length ? found.steps : [emptyStep]);
         setCoverageAreas(
-          found.coverageAreas?.length
-            ? found.coverageAreas
-            : [{ region: "", locations: "" }],
+          found.coverageAreas?.length ? found.coverageAreas : [emptyCoverage],
         );
         setPricingRows(
-          found.pricingRows?.length
-            ? found.pricingRows
-            : [{ label: "", validity: "", notes: "" }],
+          found.pricingRows?.length ? found.pricingRows : [emptyPricing],
         );
-        setFaqs(
-          found.faqs?.length ? found.faqs : [{ question: "", answer: "" }],
+        setFaqs(found.faqs?.length ? found.faqs : [emptyFaq]);
+      } catch (error) {
+        toast.error(
+          error instanceof Error ? error.message : "Failed to load service",
         );
-      } catch {
-        toast.error("Failed to load service");
+        router.push("/admin/services");
       } finally {
         setLoading(false);
       }
     };
 
-    if (id) fetchService();
+    fetchService();
   }, [id, router]);
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -121,8 +103,10 @@ export default function EditServicePage() {
       }
       toast.success("Service updated");
       router.push("/admin/services");
-    } catch {
-      toast.error("Failed to update service");
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to update service",
+      );
     } finally {
       setSaving(false);
     }

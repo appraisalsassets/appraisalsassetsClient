@@ -57,8 +57,10 @@ export default function NewServicePage() {
       }
       toast.success("Service created");
       router.push("/admin/services");
-    } catch {
-      toast.error("Failed to create service");
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to create service",
+      );
     } finally {
       setSaving(false);
     }
