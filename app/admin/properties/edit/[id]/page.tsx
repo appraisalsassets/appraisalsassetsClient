@@ -138,9 +138,10 @@ export default function EditPropertyPage() {
     try {
       const response = await api.getProperty(id);
       if (response.success) {
-        const p = response.data || response.property;
+        const p = response.property || response.data;
         if (!p) {
           toast.error("Property not found");
+          router.push("/admin/properties");
           return;
         }
         setFormData({
@@ -181,6 +182,9 @@ export default function EditPropertyPage() {
         }
         setRemovePdf(false);
         setPdfFile(null);
+      } else {
+        toast.error(response.message || "Property not found");
+        router.push("/admin/properties");
       }
     } catch (error) {
       console.error('Failed to fetch property:', error);
@@ -276,6 +280,10 @@ export default function EditPropertyPage() {
     setImageUrls((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const removeExistingImage = (index: number) => {
+    setExistingImages((prev) => prev.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -317,6 +325,7 @@ export default function EditPropertyPage() {
       if (removePdf) {
         data.append("removeDocumentPdf", "true");
       }
+      data.append("existingImages", JSON.stringify(existingImages));
 
       const response = await api.updateProperty(id, data);
       
@@ -387,24 +396,48 @@ export default function EditPropertyPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <Label className="font-semibold text-slate-900">Category *</Label>
-                <Input
-                  name="category"
-                  placeholder="e.g. for_sale or For Sale"
+                <Select
                   value={formData.category}
-                  onChange={handleChange}
-                  required
-                />
+                  onValueChange={(value) => handleSelectChange("category", value)}
+                >
+                  <SelectTrigger className="w-full bg-white border-slate-200">
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {withCurrentSelectOption(
+                      formOptions.categories,
+                      formData.category,
+                    ).map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="space-y-2">
                 <Label className="font-semibold text-slate-900">Property Type *</Label>
-                <Input
-                  name="propertyType"
-                  placeholder="e.g. apartment or Apartment"
+                <Select
                   value={formData.propertyType}
-                  onChange={handleChange}
-                  required
-                />
+                  onValueChange={(value) =>
+                    handleSelectChange("propertyType", value)
+                  }
+                >
+                  <SelectTrigger className="w-full bg-white border-slate-200">
+                    <SelectValue placeholder="Select property type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {withCurrentSelectOption(
+                      formOptions.propertyTypes,
+                      formData.propertyType,
+                    ).map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="space-y-2">
@@ -437,23 +470,46 @@ export default function EditPropertyPage() {
 
               <div className="space-y-2">
                 <Label className="font-semibold text-slate-900">Location *</Label>
-                <Input
-                  name="location"
-                  placeholder="e.g. downtown_dubai or Downtown Dubai"
+                <Select
                   value={formData.location}
-                  onChange={handleChange}
-                  required
-                />
+                  onValueChange={(value) => handleSelectChange("location", value)}
+                >
+                  <SelectTrigger className="w-full bg-white border-slate-200">
+                    <SelectValue placeholder="Select location" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {withCurrentSelectOption(
+                      formOptions.locations,
+                      formData.location,
+                    ).map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="space-y-2">
                 <Label className="font-semibold text-slate-900">Status</Label>
-                <Input
-                  name="status"
-                  placeholder="e.g. Available, Sold, Under Offer"
+                <Select
                   value={formData.status}
-                  onChange={handleChange}
-                />
+                  onValueChange={(value) => handleSelectChange("status", value)}
+                >
+                  <SelectTrigger className="w-full bg-white border-slate-200">
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {withCurrentSelectOption(
+                      formOptions.statuses,
+                      formData.status,
+                    ).map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </div>
@@ -601,9 +657,24 @@ export default function EditPropertyPage() {
               <div className="mb-4">
                 <p className="text-xs text-slate-500 mb-2">Existing Images</p>
                 <div className="grid grid-cols-3 gap-2">
-                   {existingImages.map((img, idx) => (
-                    <div key={idx} className="relative aspect-square rounded-md overflow-hidden">
-                      <img src={img.url} alt="Existing" className="w-full h-full object-cover" />
+                  {existingImages.map((img, idx) => (
+                    <div
+                      key={`${img.url}-${idx}`}
+                      className="relative aspect-square rounded-md overflow-hidden group"
+                    >
+                      <img
+                        src={img.url}
+                        alt="Existing"
+                        className="w-full h-full object-cover"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeExistingImage(idx)}
+                        className="absolute top-1 right-1 rounded-full bg-red-500/90 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100"
+                        aria-label="Remove image"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
                     </div>
                   ))}
                 </div>
