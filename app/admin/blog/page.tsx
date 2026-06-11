@@ -83,7 +83,7 @@ export default function AdminBlogPage() {
   const fetchPosts = async (searchQuery: string) => {
     try {
       setIsLoading(true);
-      const params: Record<string, string> = {};
+      const params: Record<string, string> = { limit: "100" };
       if (statusFilter !== "all") params.status = statusFilter;
       const q = searchQuery.trim();
       if (q) params.search = q;

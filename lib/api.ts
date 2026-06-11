@@ -581,19 +581,7 @@ class ApiClient {
   }
 
   async createBlogPost(formData: FormData) {
-    const headers: HeadersInit = {};
-    if (this.accessToken) {
-      headers["Authorization"] = `Bearer ${this.accessToken}`;
-    }
-
-    const response = await fetch(`${this.baseUrl}/blog`, {
-      method: "POST",
-      headers,
-      body: formData,
-      credentials: "include",
-    });
-
-    return response.json();
+    return this.submitFormData("/blog", "POST", formData, "create the blog post");
   }
 
   async updateBlogPost(id: string, formData: FormData) {

@@ -56,7 +56,11 @@ export default function BlogPostPage() {
     try {
       setIsLoading(true);
       const response = await api.getBlogPost(slug);
-      if (response.success && response.data) {
+      if (
+        response.success &&
+        response.data &&
+        response.data.status === "published"
+      ) {
         setPost(response.data);
       } else {
         router.push("/blog");

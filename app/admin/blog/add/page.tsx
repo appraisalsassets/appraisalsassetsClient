@@ -93,7 +93,14 @@ export default function AddBlogPostPage() {
       const response = await api.createBlogPost(data);
 
       if (response.success) {
-        toast.success("Blog post created successfully");
+        const savedStatus = publishStatus || formData.status;
+        if (savedStatus === "published") {
+          toast.success("Blog post published successfully");
+        } else {
+          toast.success(
+            "Draft saved. Click Publish on the post row to show it on the public blog.",
+          );
+        }
         router.push("/admin/blog");
       } else {
         toast.error(response.message || "Failed to create blog post");

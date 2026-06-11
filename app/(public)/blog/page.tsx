@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import api from "@/lib/api";
 import PageHero from "@/components/layout/PageHero";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
@@ -26,6 +27,7 @@ interface BlogPost {
   category: string;
   tags: string[];
   status: string;
+  isFeatured?: boolean;
   publishedAt: string | null;
   createdAt: string;
   createdBy?: { name: string };
@@ -43,6 +45,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 export default function BlogPage() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
 
@@ -53,22 +56,47 @@ export default function BlogPage() {
   const fetchPosts = async () => {
     try {
       setIsLoading(true);
-      const params: Record<string, string> = { status: "published" };
+      setLoadError(null);
+      const params: Record<string, string> = {
+        limit: "100",
+        sortBy: "publishedAt",
+        sortOrder: "desc",
+      };
       if (category !== "all") params.category = category;
       const response = await api.getBlogPosts(params);
       if (response.success) {
-        setPosts(response.data || []);
+        const published = (response.data || []).filter(
+          (post: BlogPost) => post.status === "published",
+        );
+        published.sort((a: BlogPost, b: BlogPost) => {
+          if (a.isFeatured && !b.isFeatured) return -1;
+          if (!a.isFeatured && b.isFeatured) return 1;
+          const aDate = new Date(a.publishedAt || a.createdAt).getTime();
+          const bDate = new Date(b.publishedAt || b.createdAt).getTime();
+          return bDate - aDate;
+        });
+        setPosts(published);
+      } else {
+        setLoadError(response.message || "Failed to load articles");
+        setPosts([]);
       }
-    } catch {
-      // silently fail for public page
+    } catch (error: unknown) {
+      setLoadError(
+        error instanceof Error ? error.message : "Failed to load articles",
+      );
+      setPosts([]);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const filteredPosts = posts.filter((post) =>
-    post.title.toLowerCase().includes(search.toLowerCase()),
-  );
+  const filteredPosts = posts.filter((post) => {
+    const query = search.toLowerCase();
+    return (
+      post.title.toLowerCase().includes(query) ||
+      post.excerpt.toLowerCase().includes(query)
+    );
+  });
 
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleDateString("en-US", {
@@ -128,6 +156,21 @@ export default function BlogPage() {
         {isLoading ? (
           <div className="text-center py-20">
             <p className="text-slate-500">Loading articles...</p>
+          </div>
+        ) : loadError ? (
+          <div className="text-center py-20">
+            <FileText className="w-16 h-16 text-slate-200 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-slate-700 mb-2">
+              Could not load articles
+            </h3>
+            <p className="text-slate-500 mb-4">{loadError}</p>
+            <Button
+              variant="outline"
+              onClick={() => void fetchPosts()}
+              className="border-slate-200"
+            >
+              Try again
+            </Button>
           </div>
         ) : filteredPosts.length === 0 ? (
           <div className="text-center py-20">
