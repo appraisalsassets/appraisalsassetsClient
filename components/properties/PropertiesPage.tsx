@@ -19,6 +19,7 @@ import PageHero from "@/components/layout/PageHero";
 import PropertyCard from "../utils/PropertyCard";
 import SaveSearchDialog from "./SaveSearchDialog";
 import { Property, getPropertyImage, normalizeProperty } from "@/types/property";
+import { categoryMatches } from "@/lib/propertyCategory";
 import { toast } from "sonner";
 import { LOCATION_LABELS } from "@/constants/locations";
 
@@ -156,7 +157,9 @@ export default function PropertiesPage({
 
     // Apply filters
     if (filters.category) {
-      result = result.filter((p) => p.category === filters.category);
+      result = result.filter((p) =>
+        categoryMatches(p.category || "", filters.category),
+      );
     }
     if (filters.location) {
       const loc = filters.location;

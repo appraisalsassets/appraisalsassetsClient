@@ -63,14 +63,19 @@ export interface PropertyCardProps {
   wrapInLink?: boolean;
 }
 
+import { normalizePropertyCategory } from "@/lib/propertyCategory";
+
 // Helper function to normalize property data
 export function normalizeProperty(property: Record<string, unknown>): Property {
+  const rawCategory = property.category as string | undefined;
   return {
     id: (property.id as string) || (property._id as string),
     _id: (property._id as string) || (property.id as string),
     title: (property.title as string) || "Property",
     description: property.description as string,
-    category: property.category as string,
+    category: rawCategory
+      ? normalizePropertyCategory(rawCategory)
+      : undefined,
     propertyType: property.propertyType as string,
     status: property.status as string,
     price: (property.price as { amount: number; currency: string }) || {

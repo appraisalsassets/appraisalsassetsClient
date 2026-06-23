@@ -11,6 +11,11 @@ import Link from "next/link";
 import { PropertyCardProps } from "@/types/property";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
+import {
+  getCategoryColor,
+  getCategoryLabel,
+  isRentalCategory,
+} from "@/lib/propertyCategory";
 
 const locationLabels = {
   "dubai-marina": "Dubai Marina",
@@ -23,20 +28,6 @@ const locationLabels = {
   "emaar-beachfront": "Emaar Beachfront",
   bluewaters: "Bluewaters",
   "city-walk": "City Walk",
-};
-
-const categoryLabels = {
-  sale: "For Sale",
-  rent: "For Rent",
-  "off-plan": "Off-Plan",
-  commercial: "Commercial",
-};
-
-const categoryColors = {
-  sale: "bg-emerald-500",
-  rent: "bg-blue-500",
-  "off-plan": "bg-[#C5A572]",
-  commercial: "bg-purple-500",
 };
 
 export default function PropertyCard({
@@ -121,20 +112,16 @@ export default function PropertyCard({
 
         {category && (
           <div
-            className={`absolute top-4 left-4 px-3 py-1 rounded-full text-white text-sm font-medium border-0 ${
-              categoryColors[category as keyof typeof categoryColors] ||
-              "bg-gray-500"
-            }`}
+            className={`absolute top-4 left-4 px-3 py-1 rounded-full text-white text-sm font-medium border-0 ${getCategoryColor(category)}`}
           >
-            {categoryLabels[category as keyof typeof categoryLabels] ||
-              category}
+            {getCategoryLabel(category)}
           </div>
         )}
 
         <div className="absolute bottom-4 left-4 right-4">
           <p className="text-2xl font-bold text-white">
             {price}
-            {category === "rent" && (
+            {isRentalCategory(category) && (
               <span className="text-sm font-normal">/year</span>
             )}
           </p>

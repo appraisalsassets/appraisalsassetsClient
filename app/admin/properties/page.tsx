@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import api from "@/lib/api";
+import { categoryMatches } from "@/lib/propertyCategory";
 import { toast } from "sonner";
 import { Plus, Search, Edit, Trash2, Eye, Building2, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
@@ -121,7 +122,8 @@ export default function PropertiesPage() {
       (property.location ?? "").toLowerCase().includes(q);
 
     const matchesCategory =
-      categoryFilter === "all" || property.category === categoryFilter;
+      categoryFilter === "all" ||
+      categoryMatches(property.category || "", categoryFilter);
 
     return matchesSearch && matchesCategory;
   });
